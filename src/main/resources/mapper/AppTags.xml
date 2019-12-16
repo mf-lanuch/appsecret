@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.AppTagsMapper">
+	<resultMap type="com.app.secret.entity.AppTags" id="BaseResultMap">
+		<result column="UUID" property="uuid"/>
+		<result column="TAG_NAME" property="tagName"/>
+		<result column="TAG_CODE" property="tagCode"/>
+		<result column="TAG_DESC" property="tagDesc"/>
+		<result column="DOC_CREATE_TIME" property="docCreateTime"/>
+		<result column="DOC_CREATOR_ID" property="docCreatorId"/>
+		<result column="DOC_CREATOR_NAME" property="docCreatorName"/>
+		<result column="DOC_ALTEROR_TIME" property="docAlterorTime"/>
+		<result column="DOC_ALTEROR_ID" property="docAlterorId"/>
+		<result column="DOC_ALTEROR_NAME" property="docAlterorName"/>
+	</resultMap>
+	
+	<sql id="defaultSelectClause">
+		t.UUID,	t.TAG_NAME ,	t.TAG_CODE,	t.TAG_DESC,	t.DOC_CREATE_TIMEe,	t.DOC_CREATOR_ID,	t.DOC_CREATOR_NAME,	t.DOC_ALTEROR_TIME,	t.DOC_ALTEROR_ID,	t.DOC_ALTEROR_NAME
+	</sql>
+	
+	<select id="selectList" parameterType="com.app.secret.entity.AppTags" resultMap="BaseResultMap">
+	SELECT 
+		<include refid="defaultSelectClause"/>
+	from APP_TAGS t
+	<include refid="defaultWhereClause"/>
+		
+	</select>
+	
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+		<if test="uuid != null">and t.UUID = #{uuid}</if>
+		<if test="tagName != null">and t.TAG_NAME = #{tagName}</if>
+		<if test="tagCode != null">and t.TAG_CODE = #{tagCode}</if>
+		<if test="tagDesc != null">and t.TAG_DESC = #{tagDesc}</if>
+		<if test="docCreateTime != null">and t.DOC_CREATE_TIME = #{docCreateTime}</if>
+		<if test="docCreatorId != null">and t.DOC_CREATOR_ID = #{docCreatorId}</if>
+		<if test="docCreatorName != null">and t.DOC_CREATOR_NAME = #{docCreatorName}</if>
+		<if test="docAlterorTime != null">and t.DOC_ALTEROR_TIME = #{docAlterorTime}</if>
+		<if test="docAlterorId != null">and t.DOC_ALTEROR_ID = #{docAlterorId}</if>
+		<if test="docAlterorName != null">and t.DOC_ALTEROR_NAME = #{docAlterorName}</if>
+		</trim>
+	</sql>
+	
+</mapper>   

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.AppMenuMapper">
+	<resultMap type="com.app.secret.entity.AppMenu" id="BaseResultMap">
+		<result column="UUID" property="uuid"/>
+		<result column="MENU_NAME" property="menuName"/>
+		<result column="MENU_CODE" property="menuCode"/>
+		<result column="MENU_ICON" property="menuIcon"/>
+		<result column="PARENT_MENU_NAME" property="parentMenuName"/>
+		<result column="PARENT_MENU_ID" property="parentMenuId"/>
+		<result column="MENU_PATH" property="menuPath"/>
+		<result column="MENU_ENABLE" property="menuEnable"/>
+		<result column="DOC_CREATE_TIME" property="docCreateTime"/>
+		<result column="DOC_CREATOR_ID" property="docCreatorId"/>
+		<result column="DOC_CREATOR_NAME" property="docCreatorName"/>
+		<result column="DOC_ALTEROR_TIME" property="docAlterorTime"/>
+		<result column="DOC_ALTEROR_ID" property="docAlterorId"/>
+		<result column="DOC_ALTEROR_NAME" property="docAlterorName"/>
+	</resultMap>
+	
+	<sql id="defaultSelectClause">
+		t.UUID,	t.MENU_NAME,	t.MENU_CODE,	t.MENU_ICON,	t.PARENT_MENU_NAME,	t.PARENT_MENU_ID,	t.MENU_PATH,	t.MENU_ENABLE,	t.DOC_CREATE_TIME,	t.DOC_CREATOR_ID,	t.DOC_CREATOR_NAME,	t.DOC_ALTEROR_TIME,	t.DOC_ALTEROR_ID,	t.DOC_ALTEROR_NAME
+	</sql>
+	
+	<select id="selectList" parameterType="com.app.secret.entity.AppMenu" resultMap="BaseResultMap">
+	SELECT 
+		<include refid="defaultSelectClause"/>
+	from APP_MENU t
+	<include refid="defaultWhereClause"/>
+		
+	</select>
+
+	<select id="selectMenuByRoleId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="defaultSelectClause"/>
+		FROM APP_MENU t
+		LEFT JOIN APP_ROLE_MENU rm ON t.UUID = rm.MENU_ID
+		WHERE rm.ROLE_ID IN
+		<foreach collection="list" index="index" item="role" open="(" close=")" separator=",">
+			#{role.uuid}
+		</foreach>
+
+	</select>
+	
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+		<if test="uuid != null">and t.UUID = #{uuid}</if>
+		<if test="menuName != null">and t.MENU_NAME = #{menuName}</if>
+		<if test="menuCode != null">and t.MENU_CODE = #{menuCode}</if>
+		<if test="menuIcon != null">and t.MENU_ICON = #{menuIcon}</if>
+		<if test="parentMenuName != null">and t.PARENT_MENU_NAME = #{parentMenuName}</if>
+		<if test="parentMenuId != null">and t.PARENT_MENU_ID = #{parentMenuId}</if>
+		<if test="menuPath != null">and t.MENU_PATH = #{menuPath}</if>
+		<if test="menuEnable != null">and t.MENU_ENABLE = #{menuEnable}</if>
+		<if test="docCreateTime != null">and t.DOC_CREATE_TIME = #{docCreateTime}</if>
+		<if test="docCreatorId != null">and t.DOC_CREATOR_ID = #{docCreatorId}</if>
+		<if test="docCreatorName != null">and t.DOC_CREATOR_NAME = #{docCreatorName}</if>
+		<if test="docAlterorTime != null">and t.DOC_ALTEROR_TIME = #{docAlterorTime}</if>
+		<if test="docAlterorId != null">and t.DOC_ALTEROR_ID = #{docAlterorId}</if>
+		<if test="docAlterorName != null">and t.DOC_ALTEROR_NAME = #{docAlterorName}</if>
+		</trim>
+	</sql>
+	
+</mapper>   

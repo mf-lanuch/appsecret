@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.AppRoleMapper">
+	<resultMap type="com.app.secret.entity.AppRole" id="BaseResultMap">
+		<result column="UUID" property="uuid"/>
+		<result column="ROLE_NAME" property="roleName"/>
+		<result column="ROLE_CODE" property="roleCode"/>
+		<result column="ROLE_DESC" property="roleDesc"/>
+		<result column="DOC_CREATE_TIME" property="docCreateTime"/>
+		<result column="DOC_CREATOR_ID" property="docCreatorId"/>
+		<result column="DOC_CREATOR_NAME" property="docCreatorName"/>
+		<result column="DOC_ALTEROR_TIME" property="docAlterorTime"/>
+		<result column="DOC_ALTEROR_ID" property="docAlterorId"/>
+		<result column="DOC_ALTEROR_NAME" property="docAlterorName"/>
+	</resultMap>
+	
+	<sql id="defaultSelectClause">
+		t.UUID,	t.ROLE_NAME,	t.ROLE_CODE,	t.ROLE_DESC,	t.DOC_CREATE_TIME,	t.DOC_CREATOR_ID,	t.DOC_CREATOR_NAME,	t.DOC_ALTEROR_TIME,	t.DOC_ALTEROR_ID,	t.DOC_ALTEROR_NAME
+	</sql>
+
+	<insert id="saveRoles">
+		INSERT INTO APP_ROLE(UUID,ROLE_NAME,ROLE_CODE,ROLE_DESC,DOC_CREATE_TIME,DOC_CREATOR_ID,DOC_CREATOR_NAME) VALUES
+		<foreach collection="list" item="role" separator="," close=";">
+			(#{role.uuid},#{role.roleName},#{role.roleCode}, #{role.roleDesc}, #{role.docCreateTime}, #{role.docCreatorId}, #{role.docCreatorName})
+		</foreach>
+	</insert>
+
+	<select id="selectRolesByUserId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="defaultSelectClause"/>
+		FROM APP_ROLE t
+		LEFT JOIN APP_USER_ROLE ur ON t.UUID = ur.ROLE_ID
+		WHERE ur.USER_ID = #{userId}
+	</select>
+
+	<select id="selectList" parameterType="com.app.secret.entity.AppRole" resultMap="BaseResultMap">
+	SELECT
+		<include refid="defaultSelectClause"/>
+	from APP_ROLE t
+	<include refid="defaultWhereClause"/>
+		
+	</select>
+	
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+		<if test="uuid != null">and t.UUID = #{uuid}</if>
+		<if test="roleName != null">and t.ROLE_NAME = #{roleName}</if>
+		<if test="roleCode != null">and t.ROLE_CODE = #{roleCode}</if>
+		<if test="roleDesc != null">and t.ROLE_DESC = #{roleDesc}</if>
+		<if test="docCreateTime != null">and t.DOC_CREATE_TIME = #{docCreateTime}</if>
+		<if test="docCreatorId != null">and t.DOC_CREATOR_ID = #{docCreatorId}</if>
+		<if test="docCreatorName != null">and t.DOC_CREATOR_NAME = #{docCreatorName}</if>
+		<if test="docAlterorTime != null">and t.DOC_ALTEROR_TIME = #{docAlterorTime}</if>
+		<if test="docAlterorId != null">and t.DOC_ALTEROR_ID = #{docAlterorId}</if>
+		<if test="docAlterorName != null">and t.DOC_ALTEROR_NAME = #{docAlterorName}</if>
+		</trim>
+	</sql>
+	
+</mapper>   

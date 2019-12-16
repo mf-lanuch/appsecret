@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.AppUsersMapper">
+	<resultMap type="com.app.secret.entity.AppUsers" id="BaseResultMap">
+		<result column="UUID" property="uuid"/>
+		<result column="USER_CODE" property="userCode"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="USER_PSWD" property="userPswd"/>
+		<result column="USER_MOILE" property="userMoile"/>
+		<result column="USER_ADDRESS" property="userAddress"/>
+		<result column="USER_BIRTHDAY" property="userBirthday"/>
+		<result column="USER_GENDER" property="userGender"/>
+		<result column="USER_FACE" property="userFace"/>
+		<result column="USER_ENABLE" property="userEnable"/>
+		<result column="USER_LOGIN_COUNT" property="userLoginCount"/>
+		<result column="USER_UNSEALING" property="userUnsealing"/>
+		<result column="USER_LAST_LOGIN_TIME" property="userLastLoginTime"/>
+		<result column="DOC_CREATE_TIME" property="docCreateTime"/>
+		<result column="DOC_CREATOR_ID" property="docCreatorId"/>
+		<result column="DOC_CREATOR_NAME" property="docCreatorName"/>
+		<result column="DOC_ALTEROR_TIME" property="docAlterorTime"/>
+		<result column="DOC_ALTEROR_ID" property="docAlterorId"/>
+		<result column="DOC_ALTEROR_NAME" property="docAlterorName"/>
+	</resultMap>
+	
+	<sql id="defaultSelectClause">
+		t.UUID,	t.USER_CODE, t.USER_NAME, t.USER_PSWD, t.USER_MOILE, t.USER_ADDRESS, t.USER_BIRTHDAY, t.USER_GENDER, t.USER_FACE, t.USER_ENABLE, t.USER_LOGIN_COUNT, t.USER_UNSEALING, t.USER_LAST_LOGIN_TIME, t.DOC_CREATE_TIME, t.DOC_CREATOR_ID, t.DOC_CREATOR_NAME, t.DOC_ALTEROR_TIME, t.DOC_ALTEROR_ID, t.DOC_ALTEROR_NAME
+	</sql>
+
+	<select id="selectList" parameterType="com.app.secret.entity.AppUsers" resultMap="BaseResultMap">
+	SELECT
+		<include refid="defaultSelectClause"/>
+	from APP_USERS t
+	<include refid="defaultWhereClause"/>
+
+	</select>
+
+	<select id="loadUserByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		<include refid="defaultSelectClause"/>
+		from APP_USERS t
+		WHERE t.USER_CODE = #{userCode}
+	</select>
+	
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+		<if test="uuid != null">and t.UUID = #{uuid}</if>
+		<if test="userCode != null">and t.USER_CODE = #{userCode}</if>
+		<if test="userName != null">and t.USER_NAME = #{userName}</if>
+		<if test="userPswd != null">and t.USER_PSWD = #{userPswd}</if>
+		<if test="userMoile != null">and t.USER_MOILE = #{userMoile}</if>
+		<if test="userAddress != null">and t.USER_ADDRESS = #{userAddress}</if>
+		<if test="userBirthday != null">and t.USER_BIRTHDAY = #{userBirthday}</if>
+		<if test="userGender != null">and t.USER_GENDER = #{userGender}</if>
+		<if test="userFace != null">and t.USER_FACE = #{userFace}</if>
+		<if test="userEnable != null">and t.USER_ENABLE = #{userEnable}</if>
+		<if test="userLoginCount != null">and t.USER_LOGIN_COUNT = #{userLoginCount}</if>
+		<if test="userUnsealing != null">and t.USER_UNSEALING = #{userUnsealing}</if>
+		<if test="userLastLoginTime != null">and t.USER_LAST_LOGIN_TIME = #{userLastLoginTime}</if>
+		<if test="docCreateTime != null">and t.DOC_CREATE_TIME = #{docCreateTime}</if>
+		<if test="docCreatorId != null">and t.DOC_CREATOR_ID = #{docCreatorId}</if>
+		<if test="docCreatorName != null">and t.DOC_CREATOR_NAME = #{docCreatorName}</if>
+		<if test="docAlterorTime != null">and t.DOC_ALTEROR_TIME = #{docAlterorTime}</if>
+		<if test="docAlterorId != null">and t.DOC_ALTEROR_ID = #{docAlterorId}</if>
+		<if test="docAlterorName != null">and t.DOC_ALTEROR_NAME = #{docAlterorName}</if>
+		</trim>
+	</sql>
+	
+</mapper>   

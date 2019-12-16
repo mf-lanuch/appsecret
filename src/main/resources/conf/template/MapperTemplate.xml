@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.${packageName}.${modelName}.mapper.$!{className}Mapper">
+	<resultMap type="com.${packageName}.${modelName}.entity.${className}" id="BaseResultMap">
+${SQL.resultMap}
+	</resultMap>
+	
+	<sql id="defaultSelectClause">
+#foreach($item in $!{columnDatas})
+	t1.$!item.columnName as $!item.formatColumnName#if($foreach.hasNext),#end 
+#end 
+	</sql>
+	
+	<select id="selectList" parameterMap="com.${packageName}.${modelName}.entity.Login" resultMap="BaseResultMap">
+	SELECT 
+		<include refid="defaultSelectClause"/>
+	from $!{tableName}
+	<include refid="defaultWhereClause"/>
+		
+	</select>
+	
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+#foreach($item in $!{columnDatas})
+#set($testStr = $!item.formatColumnName + " != null")
+#if($!item.dataType == 'String')
+#set($testStr = $!testStr + " and " + $!item.formatColumnName + " != ''")
+#end
+		<if test="$!testStr">and t.$!item.columnName = #{$!item.formatColumnName}</if>
+#end
+		</trim>
+	</sql>
+	
+</mapper>   
