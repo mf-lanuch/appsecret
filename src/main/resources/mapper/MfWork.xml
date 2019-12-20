@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.MfWorkMapper">
+	<resultMap type="com.app.secret.entity.MfWork" id="BaseResultMap">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="work_date" property="workDate" />
+		<result column="week" property="week" />
+		<result column="work_year" property="workYear" />
+		<result column="work_month" property="workMonth" />
+		<result column="status" property="status" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="insert_time" property="insertTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="defaultSelectClause">
+		t.id as id, t.user_id as userId, t.work_date as workDate, t.week as
+		week, t.work_year as workYear, t.work_month as workMonth, t.status
+		as status, t.start_time as startTime, t.end_time as endTime,
+		t.insert_time as insertTime, t.update_time as updateTime
+	</sql>
+
+	<select id="selectList"
+		parameterType="com.app.secret.entity.MfWork" resultMap="BaseResultMap">
+		SELECT
+		<include refid="defaultSelectClause" />
+		from mf_work t
+		<include refid="defaultWhereClause" />
+
+	</select>
+
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="id != null">and t.id = #{id}</if>
+			<if test="userId != null">and t.user_id = #{userId}</if>
+			<if test="workDate != null">and t.work_date = #{workDate}</if>
+			<if test="week != null">and t.week = #{week}</if>
+			<if test="workYear != null">and t.work_year = #{workYear}</if>
+			<if test="workMonth != null">and t.work_month = #{workMonth}</if>
+			<if test="status != null">and t.status = #{status}</if>
+			<if test="startTime != null">and t.start_time = #{startTime}</if>
+			<if test="endTime != null">and t.end_time = #{endTime}</if>
+			<if test="insertTime != null">and t.insert_time = #{insertTime}</if>
+			<if test="updateTime != null">and t.update_time = #{updateTime}</if>
+		</trim>
+	</sql>
+
+</mapper>   

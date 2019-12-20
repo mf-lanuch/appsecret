@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.secret.mapper.MfUserInfoMapper">
+	<resultMap type="com.app.secret.entity.MfUserInfo" id="BaseResultMap">
+		<result column="id" property="id" />
+		<result column="pcode" property="pcode" />
+		<result column="pname" property="pname" />
+		<result column="password" property="password" />
+		<result column="is_it" property="isIt" />
+		<result column="part_id" property="partId" />
+		<result column="po_id" property="poId" />
+		<result column="insert_time" property="insertTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="update_user_pcode" property="updateUserPcode" />
+	</resultMap>
+
+	<sql id="defaultSelectClause">
+		t.id as id, t.pcode as pcode, t.pname as pname, t.password as password,
+		t.is_it as isIt, t.part_id as partId, t.po_id as poId, t.insert_time
+		as
+		insertTime, t.update_time as updateTime, t.update_user_pcode as
+		updateUserPcode
+	</sql>
+
+	<select id="selectList"
+		parameterType="com.app.secret.entity.MfUserInfo" resultMap="BaseResultMap">
+		SELECT
+		<include refid="defaultSelectClause" />
+		from mf_user_info t
+		<include refid="defaultWhereClause" />
+
+	</select>
+
+	<sql id="defaultWhereClause">
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="id != null">and t.id = #{id}</if>
+			<if test="pcode != null">and t.pcode = #{pcode}</if>
+			<if test="pname != null">and t.pname = #{pname}</if>
+			<if test="password != null">and t.password = #{password}</if>
+			<if test="isIt != null">and t.is_it = #{isIt}</if>
+			<if test="partId != null">and t.part_id = #{partId}</if>
+			<if test="poId != null">and t.po_id = #{poId}</if>
+			<if test="insertTime != null">and t.insert_time = #{insertTime}</if>
+			<if test="updateTime != null">and t.update_time = #{updateTime}</if>
+			<if test="updateUserPcode != null">and t.update_user_pcode = #{updateUserPcode}</if>
+		</trim>
+	</sql>
+
+</mapper>   
