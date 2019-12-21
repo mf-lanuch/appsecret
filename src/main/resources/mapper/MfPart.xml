@@ -35,4 +35,31 @@
 		</trim>
 	</sql>
 
+	<select id="getPartOvertime" resultType="com.app.secret.core.vo.PartOverTimeVO">
+		SELECT
+		MP.id as id,
+		MP.part_name as partName,
+		MW.work_year as workYear,
+		MW.work_month as workMonth,
+    time_format(SEC_TO_TIME(SUM(case when end_time > '17:30:00' then TIME_TO_SEC(TIMEDIFF(end_time,'17:30:00')) end) ),'%H:%I:%S') AS talOverTime
+		FROM mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE MW.end_time > '17:30:00'
+		<if test="query.partId != null and query.partId != ''">
+			AND MP.id = #{query.partId}
+		</if>
+		<if test="query.workStartDate != null">
+			AND MW.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+		</if>
+		<if test="query.workEndDate != null">
+			AND MW.work_date <![CDATA[ <= ]]> #{query.workEndDate}
+		</if>
+		GROUP BY
+		MP.id,
+		MP.part_name,
+		MW.work_year,
+		MW.work_month
+	</select>
+
 </mapper>   

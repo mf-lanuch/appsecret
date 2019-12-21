@@ -48,4 +48,33 @@
 		</trim>
 	</sql>
 
+	<select id="getITPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+		SELECT
+		t.pname as pname,
+		t.pcode as pcode,
+		t.work_year as workYear,
+		t.work_month as workMonth,
+    time_format(SEC_TO_TIME( t.ot ),'%H:%I:%S') AS totalOverTime
+		FROM
+		(
+		SELECT
+		mui.pname,
+		mui.pcode,
+		mw.work_year,
+		mw.work_month,
+		SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+		FROM
+		mf_user_info mui
+		LEFT JOIN mf_work mw ON mui.id = mw.user_id
+		WHERE 1=1
+		<if test="query.pcode != null and query.pcode != ''">
+			AND mui.pcode = #{query.pcode}
+		</if>
+		<if test="query.workStartDate != null and query.workEndDate != null" >
+			AND mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+			AND mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
+		</if>
+		) t;
+	</select>
+
 </mapper>   
