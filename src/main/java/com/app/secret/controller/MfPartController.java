@@ -2,8 +2,11 @@ package com.app.secret.controller;
 
 import com.app.secret.core.base.annotation.IgnoreAccessToken;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.request.DeptOvertimeReq;
+import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.vo.AjaxResult;
+import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
 import com.app.secret.services.MfPartService;
@@ -36,6 +39,42 @@ public class MfPartController {
         List<PartOverTimeVO> resList = new ArrayList<>();
         try{
             resList = mfPartService.getPartOvertime(partOverTimeReq);
+            res.setStatus(200);
+            res.setMessage("SUCCESS");
+            res.setObject(resList);
+            return res;
+        }catch (Exception e){
+            res.setStatus(-1);
+            res.setMessage("数据库查询错误");
+            return res;
+        }
+    }
+
+    @ApiOperation(value = "获取公司，传统板块，IT板块加班率")
+    @RequestMapping(value = "/getOverTimeRate", method = RequestMethod.POST)
+    public AjaxResult<OverTimeRateVO> getOverTimeRate(@RequestBody @Validated OvertimeRateReq overtimeRateReq) {
+        AjaxResult<OverTimeRateVO> res = new AjaxResult();
+        OverTimeRateVO overTimeRateVO = new OverTimeRateVO();
+        try{
+            overTimeRateVO = mfPartService.getOverTimeRate(overtimeRateReq);
+            res.setStatus(200);
+            res.setMessage("SUCCESS");
+            res.setObject(overTimeRateVO);
+            return res;
+        }catch (Exception e){
+            res.setStatus(-1);
+            res.setMessage("数据库查询错误");
+            return res;
+        }
+    }
+
+    @ApiOperation(value = "获取部门当年每个月加班时长")
+    @RequestMapping(value = "/getDeptOvertimeMonth", method = RequestMethod.POST)
+    public AjaxResult<List<PartOverTimeVO>> getDeptOvertimeMonth(@RequestBody @Validated DeptOvertimeReq deptOvertimeReq) {
+        AjaxResult<List<PartOverTimeVO>> res = new AjaxResult();
+        List<PartOverTimeVO> resList = new ArrayList<>();
+        try{
+            resList = mfPartService.getDeptOvertimeMonth(deptOvertimeReq);
             res.setStatus(200);
             res.setMessage("SUCCESS");
             res.setObject(resList);
