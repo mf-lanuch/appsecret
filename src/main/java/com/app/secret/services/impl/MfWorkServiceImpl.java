@@ -18,5 +18,10 @@ public class MfWorkServiceImpl implements MfWorkService {
 		return mfWorkMapper.insert(work);
 	}
 
+	@Override
+	public int delete(MfWork work) {
+		return mfWorkMapper.delete(work);
+	}
+
 }
 

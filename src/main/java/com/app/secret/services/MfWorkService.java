@@ -5,4 +5,6 @@ import com.app.secret.entity.MfWork;
 public interface MfWorkService {
 	
 	int insert(MfWork work);
+	
+	int delete(MfWork work);
 }

@@ -41,50 +41,58 @@ public class DemoController {
 	public AjaxResult<String> createData() throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
-		int []month = {10, 11};
-		int []day = {31, 30};
+		int []year = {2018, 2019};
+		int []month = {10, 11, 12};
+		int []day = {31, 30, 31};
 		List<MfUserInfo> userInfos = mfUserInfoService.getMfUserInfoList(new MfUserInfo());
 		for (MfUserInfo userInfo: userInfos) {
-			for (int i = 0; i < month.length; i++) {
-				for (int j = 1; j < day[i]; j ++) {
-					Calendar c = Calendar.getInstance();
-					String date = getDate(month[i], j);
-					Date workDate = dateSdf.parse(date);
-					c.setTime(workDate);
-					int year = c.get(Calendar.YEAR);
-					int m = month[i];
-					int d = j;
-					int w = c.get(Calendar.DAY_OF_WEEK);
-					if (w == Calendar.SUNDAY) {
-						w = 7;
-					} else {
-						w --;
-					}
-					if(w == 6 || w == 7) {
-						double r = Math.random();
-						if(r > 0.2) {
+			for (int k = 0; k < year.length; k++) {
+				for (int i = 0; i < month.length; i++) {
+					MfWork deleteObj = new MfWork();
+					deleteObj.setWorkMonth(month[i]);
+					deleteObj.setWorkYear(year[k]);
+					deleteObj.setUserId(userInfo.getId());
+					mfWorkService.delete(deleteObj);
+					for (int j = 1; j < day[i]; j ++) {
+						Calendar c = Calendar.getInstance();
+						String date = getDate(year[k], month[i], j);
+						Date workDate = dateSdf.parse(date);
+						c.setTime(workDate);
+						int y = c.get(Calendar.YEAR);
+						int m = month[i];
+						int d = j;
+						int w = c.get(Calendar.DAY_OF_WEEK);
+						if (w == Calendar.SUNDAY) {
+							w = 7;
+						} else {
+							w --;
+						}
+						if(w == 6 || w == 7) {
+							double r = Math.random();
+							if(r > 0.2) {
+								continue ;
+							}
+						}
+						MfWork mfWork = new MfWork();
+						mfWork.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+						mfWork.setUserId(userInfo.getId());
+						mfWork.setWorkDate(workDate);
+						mfWork.setWeek(w);
+						mfWork.setWorkYear(y);
+						mfWork.setWorkMonth(m);
+						mfWork.setStatus(1);
+						mfWork.setStartTime(sdf.parse(getStartTime(w)));
+						mfWork.setEndTime(sdf.parse(getEndTime(w)));
+						if(mfWork.getStartTime().getTime() > mfWork.getEndTime().getTime()) {
 							continue ;
 						}
+						mfWork.setInsertTime(new Date());
+						mfWork.setUpdateTime(new Date());
+						mfWorkService.insert(mfWork);
+						System.out.println(date + "=>>" + userInfo.getPname());
 					}
-					MfWork mfWork = new MfWork();
-					mfWork.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
-					mfWork.setUserId(userInfo.getId());
-					mfWork.setWorkDate(workDate);
-					mfWork.setWeek(w);
-					mfWork.setWorkYear(year);
-					mfWork.setWorkMonth(m);
-					mfWork.setStatus(1);
-					mfWork.setStartTime(sdf.parse(getStartTime(w)));
-					mfWork.setEndTime(sdf.parse(getEndTime(w)));
-					if(mfWork.getStartTime().getTime() > mfWork.getEndTime().getTime()) {
-						continue ;
-					}
-					mfWork.setInsertTime(new Date());
-					mfWork.setUpdateTime(new Date());
-					mfWorkService.insert(mfWork);
-					System.out.println(date + "=>>" + userInfo.getPname());
 				}
- 			}
+			}
 		}
 		return new AjaxResult<String>(200, "SUCCESS");
 	}
@@ -146,7 +154,7 @@ public class DemoController {
 		return String.valueOf(value);
 	}
 
-	private String getDate(int month, int day) {
+	private String getDate(int year, int month, int day) {
 		String m = String.valueOf(month);
 		String d = String.valueOf(day);
 		if (month < 10) {
@@ -155,7 +163,7 @@ public class DemoController {
 		if (day < 10) {
 			d = "0" + d;
 		}
-		return "2019-" + m + "-" + d;
+		return year +"-" + m + "-" + d;
 	}
 	
 	public static void main(String []args) throws ParseException {
