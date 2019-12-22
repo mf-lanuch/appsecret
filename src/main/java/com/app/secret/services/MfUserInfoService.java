@@ -1,7 +1,10 @@
 package com.app.secret.services;
 
+import java.util.List;
+
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.entity.MfUserInfo;
 
 public interface MfUserInfoService {
     /**
@@ -19,5 +22,7 @@ public interface MfUserInfoService {
      * @return
      */
     boolean judgeIT(String pcode);
+    
+    List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo);
 }
 

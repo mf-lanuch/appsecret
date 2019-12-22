@@ -9,8 +9,8 @@ public class MfWork {
 	private java.lang.Object workYear; // 工作年份
 	private java.lang.Integer workMonth; // 工作月份
 	private java.lang.Integer status; // 工作状态：1上班 2事假 3调休 4病假 5公务外出 6异常
-	private java.sql.Timestamp startTime; // 打卡起始时间
-	private java.sql.Timestamp endTime; // 打卡终止时间
+	private java.util.Date startTime; // 打卡起始时间
+	private java.util.Date endTime; // 打卡终止时间
 	private java.util.Date insertTime; // 插入时间
 	private java.util.Date updateTime; // 更新时间
 
@@ -70,19 +70,19 @@ public class MfWork {
 		this.status = status;
 	}
 
-	public java.sql.Timestamp getStartTime() {
+	public java.util.Date getStartTime() {
 		return this.startTime;
 	}
 
-	public void setStartTime(java.sql.Timestamp startTime) {
+	public void setStartTime(java.util.Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public java.sql.Timestamp getEndTime() {
+	public java.util.Date getEndTime() {
 		return this.endTime;
 	}
 
-	public void setEndTime(java.sql.Timestamp endTime) {
+	public void setEndTime(java.util.Date endTime) {
 		this.endTime = endTime;
 	}
 

@@ -2,7 +2,11 @@ package com.app.secret.services.impl;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.entity.MfUserInfo;
 import com.app.secret.mapper.MfUserInfoMapper;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +34,10 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
         // TODO
         return true;
     }
+
+	@Override
+	public List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo) {
+		return mfUserInfoMapper.select(userInfo);
+	}
 }
 
