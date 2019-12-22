@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.secret.core.vo.AjaxResult;
@@ -17,12 +18,16 @@ import com.app.secret.entity.MfWork;
 import com.app.secret.services.MfUserInfoService;
 import com.app.secret.services.MfWorkService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /*
  * Devil
  * 2019年12月22日
  */
 @RestController
 @RequestMapping(value = "/demo")
+@Api(tags="数据")
 public class DemoController {
 
 	@Autowired
@@ -31,7 +36,8 @@ public class DemoController {
 	@Autowired
 	private MfUserInfoService mfUserInfoService;
 	
-	@RequestMapping(value = "/create")
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@ApiOperation("造数据")
 	public AjaxResult<String> createData() throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
