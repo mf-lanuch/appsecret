@@ -127,4 +127,28 @@
             AND mw.`week` IN ( 6, 7 )
             ) t;
     </select>
+
+    <select id="getPersonalAttenceList" resultType="com.app.secret.core.vo.PersonalAttenceListVO">
+        select
+        mui.pcode,
+        mui.pname,
+        mw.work_date as workDate,
+        mw.`week`,
+        case when mw.`status` = 1 then '上班'
+        when mw.`status` = 2 then '事假'
+        when mw.`status` = 3 then '调休'
+        when mw.`status` = 4 then '病假'
+        when mw.`status` = 5 then '公务外出'
+        else '异常' end as workStatus,
+        time_format(mw.start_time,'%H:%I:%S') as startTime,
+        time_format(mw.end_time,'%H:%I:%S') as endTime
+        from mf_work mw
+        left join mf_user_info mui on mw.user_id = mui.id
+        where mui.pcode = '00045'
+        and mw.work_date <![CDATA[ >= ]]> '2019-12-01'
+        and mw.work_date <![CDATA[ <= ]]> '2019-12-31'
+        order by
+        mw.work_date
+    </select>
+
 </mapper>   

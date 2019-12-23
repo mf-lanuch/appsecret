@@ -39,17 +39,17 @@ public class MfPartController {
     @RequestMapping(value = "/getPartOvertime", method = RequestMethod.POST)
     public AjaxResult<List<PartOverTimeVO>> getPartOvertime(@RequestBody @Validated PartOverTimeReq partOverTimeReq) {
         AjaxResult<List<PartOverTimeVO>> res = new AjaxResult();
-        List<PartOverTimeVO> resList = new ArrayList<>();
-        try{
-            resList = mfPartService.getPartOvertime(partOverTimeReq);
-            res.setStatus(200);
-            res.setMessage("SUCCESS");
-            res.setObject(resList);
-            return res;
-        }catch (Exception e){
-            res.setStatus(-1);
-            res.setMessage("数据库查询错误");
-            return res;
+            List<PartOverTimeVO> resList = new ArrayList<>();
+            try{
+                resList = mfPartService.getPartOvertime(partOverTimeReq);
+                res.setStatus(200);
+                res.setMessage("SUCCESS");
+                res.setObject(resList);
+                return res;
+            }catch (Exception e){
+                res.setStatus(-1);
+                res.setMessage("数据库查询错误");
+                return res;
         }
     }
 

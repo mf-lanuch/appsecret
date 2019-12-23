@@ -1,7 +1,9 @@
 package com.app.secret.services.impl;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.entity.MfUserInfo;
 import com.app.secret.mapper.MfUserInfoMapper;
 
@@ -47,5 +49,11 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
 	public List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo) {
 		return mfUserInfoMapper.select(userInfo);
 	}
+
+    @Override
+    public List<PersonalAttenceListVO> getPersonalAttenceList(
+        PersonalAttenceReq personalAttenceReq) {
+        return mfUserInfoMapper.getPersonalAttenceList(personalAttenceReq);
+    }
 }
 

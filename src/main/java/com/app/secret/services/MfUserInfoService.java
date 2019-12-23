@@ -1,5 +1,7 @@
 package com.app.secret.services;
 
+import com.app.secret.core.request.PersonalAttenceReq;
+import com.app.secret.core.vo.PersonalAttenceListVO;
 import java.util.List;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
@@ -24,5 +26,13 @@ public interface MfUserInfoService {
     boolean judgeIT(String pcode);
     
     List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo);
+
+    /**
+     * 获取考勤明细
+     *
+     * @param personalAttenceReq
+     * @return
+     */
+    List<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq);
 }
 

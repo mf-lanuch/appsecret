@@ -1,9 +1,12 @@
 package com.app.secret.mapper;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.entity.MfUserInfo;
 
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -23,5 +26,13 @@ public interface MfUserInfoMapper extends Mapper<MfUserInfo> {
      * @return
      */
     PersonaOvertimeVO getPersonalOvertime(@Param("query") GetPersonalOvertimeDTO query);
+
+    /**
+     * 获取考勤明细
+     *
+     * @param personalAttenceReq
+     * @return
+     */
+    List<PersonalAttenceListVO> getPersonalAttenceList(@Param("query") PersonalAttenceReq personalAttenceReq);
 }
 
