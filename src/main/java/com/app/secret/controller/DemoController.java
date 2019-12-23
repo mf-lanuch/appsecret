@@ -7,6 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.app.secret.core.vo.Example;
+import com.app.secret.entity.MfMagnification;
+import com.app.secret.entity.MfMagnificationIt;
+import com.app.secret.mapper.MfMagnificationItMapper;
+import com.app.secret.mapper.MfMagnificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +40,13 @@ public class DemoController {
 	
 	@Autowired
 	private MfUserInfoService mfUserInfoService;
-	
+
+	@Autowired
+	private MfMagnificationMapper mfMagnificationMapper;
+
+	@Autowired
+	private MfMagnificationItMapper mfMagnificationItMapper;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	@ApiOperation("造数据")
 	public AjaxResult<String> createData() throws ParseException {
@@ -94,6 +105,68 @@ public class DemoController {
 				}
 			}
 		}
+		return new AjaxResult<String>(200, "SUCCESS");
+	}
+
+	@RequestMapping(value = "/initMfMagnification", method = RequestMethod.GET)
+	@ApiOperation("初始化倍率")
+	public AjaxResult<String> initMfMagnification() {
+		// 非IT倍率
+		MfMagnification magnification1 = new MfMagnification();
+		magnification1.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		magnification1.setInsertTime(new Date());
+		// 工作日
+		magnification1.setWorkDateType(1);
+		// 倍率
+		magnification1.setMagValue(1);
+		mfMagnificationMapper.insertSelective(magnification1);
+
+		MfMagnification magnification2 = new MfMagnification();
+		magnification2.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		magnification2.setInsertTime(new Date());
+		// 周末
+		magnification2.setWorkDateType(2);
+		// 倍率
+		magnification2.setMagValue(2);
+		mfMagnificationMapper.insertSelective(magnification2);
+
+		MfMagnification magnification3 = new MfMagnification();
+		magnification3.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		magnification3.setInsertTime(new Date());
+		// 节假日
+		magnification3.setWorkDateType(3);
+		// 倍率
+		magnification3.setMagValue(3);
+		mfMagnificationMapper.insertSelective(magnification3);
+
+		// IT倍率
+		MfMagnificationIt mfMagnificationIt1 = new MfMagnificationIt();
+		mfMagnificationIt1.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		mfMagnificationIt1.setInsertTime(new Date());
+		// 工作日
+		mfMagnificationIt1.setWorkDateType(1);
+		// 倍率
+		mfMagnificationIt1.setMagValue(1);
+		mfMagnificationItMapper.insertSelective(mfMagnificationIt1);
+
+		MfMagnificationIt mfMagnificationIt2 = new MfMagnificationIt();
+		mfMagnificationIt2.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		mfMagnificationIt2.setInsertTime(new Date());
+		// 周末
+		mfMagnificationIt2.setWorkDateType(2);
+		// 倍率
+		mfMagnificationIt2.setMagValue(1);
+		mfMagnificationItMapper.insertSelective(mfMagnificationIt2);
+
+		MfMagnificationIt mfMagnificationIt3 = new MfMagnificationIt();
+		mfMagnificationIt3.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+		mfMagnificationIt3.setInsertTime(new Date());
+		// 节假日
+		mfMagnificationIt3.setWorkDateType(3);
+		// 倍率
+		mfMagnificationIt3.setMagValue(1);
+		mfMagnificationItMapper.insertSelective(mfMagnificationIt3);
+
 		return new AjaxResult<String>(200, "SUCCESS");
 	}
 
