@@ -144,9 +144,9 @@
         time_format(mw.end_time,'%H:%I:%S') as endTime
         from mf_work mw
         left join mf_user_info mui on mw.user_id = mui.id
-        where mui.pcode = '00045'
-        and mw.work_date <![CDATA[ >= ]]> '2019-12-01'
-        and mw.work_date <![CDATA[ <= ]]> '2019-12-31'
+        where mui.pcode = #{query.pcode}
+        and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+        and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
         order by
         mw.work_date
     </select>
