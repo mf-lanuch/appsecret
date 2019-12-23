@@ -70,10 +70,10 @@
 		<if test="query.pcode != null and query.pcode != ''">
 			AND mui.pcode = #{query.pcode}
 		</if>
-		<if test="query.workStartDate != null and query.workEndDate != null" >
-			AND mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
-			AND mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
-		</if>
+		AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+		AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+		AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+		AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
 		) t;
 	</select>
 
