@@ -241,4 +241,74 @@
 		MW.work_month
 	</select>
 
+	<select id="getPeriodOvertime" resultType="com.app.secret.core.vo.PeriodOverTimeVO">
+		SELECT
+		RES.id,
+		RES.partName,
+		RES.workYear,
+		RES.workMonth,
+		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as talOverTime,
+		time_format(SEC_TO_TIME(SUM(RES.lastOverTime)),'%H:%I:%S') as lastOverTime
+		FROM (
+		SELECT
+		MP.id AS id,
+		MP.part_name AS partName,
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		SUM(
+		CASE WHEN ( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 ) THEN TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) * 2
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) END) AS talOverTime,
+		0 as lastOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.id = #{query.partId}
+		AND (MW.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+		AND MW.work_month <![CDATA[ >= ]]> #{query.workMonthStart})
+		AND (MW.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+		AND MW.work_month <![CDATA[ <= ]]> #{query.workMonthEnd})
+		GROUP BY
+		MP.id,
+		MP.part_name,
+		MW.work_year,
+		MW.work_month
+		UNION ALL
+		SELECT
+		MP.id AS id,
+		MP.part_name AS partName,
+		MW.work_year + 1 AS workYear,
+		MW.work_month AS workMonth,
+		0 AS talOverTime,
+		SUM(
+		CASE WHEN ( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 ) THEN TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) * 2
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) END) as lastOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.id = #{query.partId}
+		AND (MW.work_year <![CDATA[ >= ]]> #{query.workYearStart} -1
+		AND MW.work_month <![CDATA[ >= ]]> #{query.workMonthStart})
+		AND (MW.work_year <![CDATA[ <= ]]> #{query.workYearEnd} -1
+		AND MW.work_month <![CDATA[ <= ]]> #{query.workMonthEnd})
+		GROUP BY
+		MP.id,
+		MP.part_name,
+		MW.work_year,
+		MW.work_month
+		) RES
+		GROUP BY
+		RES.id,
+		RES.partName,
+		RES.workYear,
+		RES.workMonth
+	</select>
+
 </mapper>   

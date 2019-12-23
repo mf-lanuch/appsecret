@@ -8,6 +8,7 @@ import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.vo.AjaxResult;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
+import com.app.secret.core.vo.PeriodOverTimeVO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
 import com.app.secret.services.MfPartService;
 import com.app.secret.services.MfUserInfoService;
@@ -75,6 +76,24 @@ public class MfPartController {
         List<PartOverTimeVO> resList = new ArrayList<>();
         try{
             resList = mfPartService.getDeptOvertimeMonth(deptOvertimeReq);
+            res.setStatus(200);
+            res.setMessage("SUCCESS");
+            res.setObject(resList);
+            return res;
+        }catch (Exception e){
+            res.setStatus(-1);
+            res.setMessage("数据库查询错误");
+            return res;
+        }
+    }
+
+    @ApiOperation(value = "获取部门当年每个月加班时长及同期加班时长")
+    @RequestMapping(value = "/getPeriodOvertime", method = RequestMethod.POST)
+    public AjaxResult<List<PeriodOverTimeVO>> getPeriodOvertime(@RequestBody @Validated DeptOvertimeReq deptOvertimeReq) {
+        AjaxResult<List<PeriodOverTimeVO>> res = new AjaxResult();
+        List<PeriodOverTimeVO> resList = new ArrayList<>();
+        try{
+            resList = mfPartService.getPeriodOvertime(deptOvertimeReq);
             res.setStatus(200);
             res.setMessage("SUCCESS");
             res.setObject(resList);

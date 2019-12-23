@@ -6,6 +6,7 @@ import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
+import com.app.secret.core.vo.PeriodOverTimeVO;
 import com.app.secret.mapper.MfPartMapper;
 import com.app.secret.mapper.MfUserInfoMapper;
 import java.util.List;
@@ -43,6 +44,11 @@ public class MfPartServiceImpl implements MfPartService {
     @Override
     public List<PartOverTimeVO> getDeptOvertimeMonth(DeptOvertimeReq deptOvertimeReq) {
         return mfPartMapper.getDeptOvertimeMonth(deptOvertimeReq);
+    }
+
+    @Override
+    public List<PeriodOverTimeVO> getPeriodOvertime(DeptOvertimeReq deptOvertimeReq) {
+        return mfPartMapper.getPeriodOvertime(deptOvertimeReq);
     }
 }
 
