@@ -12,7 +12,7 @@ import com.app.secret.core.vo.AjaxResult;
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping(value = "/index")
+@RequestMapping(value = "")
 @Api(tags = "demo测试")
 @IgnoreAccessToken
 public class LoginController {
@@ -23,8 +23,8 @@ public class LoginController {
         return "success";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public AjaxResult<String> login(String userCode, String password, HttpServletResponse response) {
-        return AjaxResult.success(null);
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public AjaxResult<String> login(String userCode, String password, String validate, HttpServletResponse response) {
+        return AjaxResult.success("success");
     }
 }
