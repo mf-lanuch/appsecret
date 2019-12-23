@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.app.secret.mapper.MfUserInfoMapper">
-	<resultMap type="com.app.secret.entity.MfUserInfo" id="BaseResultMap">
-		<result column="id" property="id" />
-		<result column="pcode" property="pcode" />
-		<result column="pname" property="pname" />
-		<result column="password" property="password" />
-		<result column="is_it" property="isIt" />
-		<result column="part_id" property="partId" />
-		<result column="po_id" property="poId" />
-		<result column="insert_time" property="insertTime" />
-		<result column="update_time" property="updateTime" />
-		<result column="update_user_pcode" property="updateUserPcode" />
-	</resultMap>
+    <resultMap type="com.app.secret.entity.MfUserInfo" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="pcode" property="pcode"/>
+        <result column="pname" property="pname"/>
+        <result column="password" property="password"/>
+        <result column="is_it" property="isIt"/>
+        <result column="part_id" property="partId"/>
+        <result column="po_id" property="poId"/>
+        <result column="insert_time" property="insertTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_pcode" property="updateUserPcode"/>
+    </resultMap>
 
-	<sql id="defaultSelectClause">
+    <sql id="defaultSelectClause">
 		t.id as id, t.pcode as pcode, t.pname as pname, t.password as password,
 		t.is_it as isIt, t.part_id as partId, t.po_id as poId, t.insert_time
 		as
@@ -24,57 +24,107 @@
 		updateUserPcode
 	</sql>
 
-	<select id="selectList"
-		parameterType="com.app.secret.entity.MfUserInfo" resultMap="BaseResultMap">
-		SELECT
-		<include refid="defaultSelectClause" />
-		from mf_user_info t
-		<include refid="defaultWhereClause" />
+    <select id="selectList"
+            parameterType="com.app.secret.entity.MfUserInfo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="defaultSelectClause"/>
+        from mf_user_info t
+        <include refid="defaultWhereClause"/>
 
-	</select>
+    </select>
 
-	<sql id="defaultWhereClause">
-		<trim prefix="where" prefixOverrides="and|or">
-			<if test="id != null">and t.id = #{id}</if>
-			<if test="pcode != null">and t.pcode = #{pcode}</if>
-			<if test="pname != null">and t.pname = #{pname}</if>
-			<if test="password != null">and t.password = #{password}</if>
-			<if test="isIt != null">and t.is_it = #{isIt}</if>
-			<if test="partId != null">and t.part_id = #{partId}</if>
-			<if test="poId != null">and t.po_id = #{poId}</if>
-			<if test="insertTime != null">and t.insert_time = #{insertTime}</if>
-			<if test="updateTime != null">and t.update_time = #{updateTime}</if>
-			<if test="updateUserPcode != null">and t.update_user_pcode = #{updateUserPcode}</if>
-		</trim>
-	</sql>
+    <sql id="defaultWhereClause">
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">and t.id = #{id}</if>
+            <if test="pcode != null">and t.pcode = #{pcode}</if>
+            <if test="pname != null">and t.pname = #{pname}</if>
+            <if test="password != null">and t.password = #{password}</if>
+            <if test="isIt != null">and t.is_it = #{isIt}</if>
+            <if test="partId != null">and t.part_id = #{partId}</if>
+            <if test="poId != null">and t.po_id = #{poId}</if>
+            <if test="insertTime != null">and t.insert_time = #{insertTime}</if>
+            <if test="updateTime != null">and t.update_time = #{updateTime}</if>
+            <if test="updateUserPcode != null">and t.update_user_pcode = #{updateUserPcode}</if>
+        </trim>
+    </sql>
 
-	<select id="getITPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
-		SELECT
-		t.pname as pname,
-		t.pcode as pcode,
-		t.work_year as workYear,
-		t.work_month as workMonth,
-    time_format(SEC_TO_TIME( t.ot ),'%H:%I:%S') AS totalOverTime
-		FROM
-		(
-		SELECT
-		mui.pname,
-		mui.pcode,
-		mw.work_year,
-		mw.work_month,
-		SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
-		FROM
-		mf_user_info mui
-		LEFT JOIN mf_work mw ON mui.id = mw.user_id
-		WHERE 1=1
-		<if test="query.pcode != null and query.pcode != ''">
-			AND mui.pcode = #{query.pcode}
-		</if>
-		AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-		AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-		AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-		AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
-		) t;
-	</select>
+    <select id="getITPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+        SELECT
+        t.pname as pname,
+        t.pcode as pcode,
+        t.work_year as workYear,
+        t.work_month as workMonth,
+        time_format(SEC_TO_TIME( t.ot ),'%H:%I:%S') AS totalOverTime
+        FROM
+        (
+        SELECT
+        mui.pname,
+        mui.pcode,
+        mw.work_year,
+        mw.work_month,
+        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+        FROM
+        mf_user_info mui
+        LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE 1=1
+        <if test="query.pcode != null and query.pcode != ''">
+            AND mui.pcode = #{query.pcode}
+        </if>
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+        ) t;
+    </select>
 
+    <select id="getPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+        SELECT
+        t.pname AS pname,
+        t.pcode AS pcode,
+        t.work_year AS workYear,
+        t.work_month AS workMonth,
+        time_format( SEC_TO_TIME( sum( t.ot ) ), '%H:%I:%S' ) AS totalOverTime
+        FROM
+            (
+        SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+            UNION all
+            SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * 2 ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            AND mw.`week` IN ( 6, 7 )
+            ) t;
+    </select>
 </mapper>   
