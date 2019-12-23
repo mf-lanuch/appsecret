@@ -4,9 +4,11 @@ import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.request.DeptOvertimeReq;
 import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
+import com.app.secret.core.request.PeriodOvertimeReq;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PeriodOverTimeVO;
+import com.app.secret.core.vo.PeriodOvertimeWeekVO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
 import java.util.List;
 
@@ -43,6 +45,14 @@ public interface MfPartService {
      * @return
      */
     List<PeriodOverTimeVO> getPeriodOvertime(DeptOvertimeReq deptOvertimeReq);
+
+    /**
+     * 获取部门当年每个月加班时长及同期加班时长
+     *
+     * @param periodOvertimeReq
+     * @return
+     */
+    List<PeriodOvertimeWeekVO> getPeriodOvertimeWeek(PeriodOvertimeReq periodOvertimeReq);
 
 }
 

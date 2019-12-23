@@ -1,6 +1,8 @@
 package com.app.secret.mapper;
 
+import com.app.secret.core.request.PeriodOvertimeReq;
 import com.app.secret.core.vo.PeriodOverTimeVO;
+import com.app.secret.core.vo.PeriodOvertimeWeekVO;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -66,6 +68,15 @@ public interface MfPartMapper extends BaseMapper<MfPart>{
      * @return
      */
     List<PeriodOverTimeVO> getPeriodOvertime(@Param("query") DeptOvertimeReq deptOvertimeReq);
+
+    /**
+     * 获取部门每月加班时长及同期加班时长
+     *
+     * @param periodOvertimeReq
+     *
+     * @return
+     */
+    List<PeriodOvertimeWeekVO> getPeriodOvertimeWeek(@Param("query") PeriodOvertimeReq periodOvertimeReq);
 
 
 }

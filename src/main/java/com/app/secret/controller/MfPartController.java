@@ -5,10 +5,12 @@ import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.request.DeptOvertimeReq;
 import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
+import com.app.secret.core.request.PeriodOvertimeReq;
 import com.app.secret.core.vo.AjaxResult;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PeriodOverTimeVO;
+import com.app.secret.core.vo.PeriodOvertimeWeekVO;
 import com.app.secret.core.vo.PersonaOvertimeVO;
 import com.app.secret.services.MfPartService;
 import com.app.secret.services.MfUserInfoService;
@@ -104,5 +106,24 @@ public class MfPartController {
             return res;
         }
     }
+
+    @ApiOperation(value = "获取部门周加班时长统计及同期加班时长统计")
+    @RequestMapping(value = "/getPeriodOvertimeWeek", method = RequestMethod.POST)
+    public AjaxResult<List<PeriodOvertimeWeekVO>> getPeriodOvertimeWeek(@RequestBody @Validated PeriodOvertimeReq periodOvertimeReq) {
+        AjaxResult<List<PeriodOvertimeWeekVO>> res = new AjaxResult();
+        List<PeriodOvertimeWeekVO> resList = new ArrayList<>();
+        try{
+            resList = mfPartService.getPeriodOvertimeWeek(periodOvertimeReq);
+            res.setStatus(200);
+            res.setMessage("SUCCESS");
+            res.setObject(resList);
+            return res;
+        }catch (Exception e){
+            res.setStatus(-1);
+            res.setMessage("数据库查询错误");
+            return res;
+        }
+    }
+
 
 }

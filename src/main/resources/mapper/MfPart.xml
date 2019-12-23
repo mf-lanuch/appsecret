@@ -311,4 +311,73 @@
 		RES.workMonth
 	</select>
 
+	<select id="getPeriodOvertimeWeek" resultType="com.app.secret.core.vo.PeriodOvertimeWeekVO">
+		SELECT
+		RES.id,
+		RES.partName,
+		RES.workYear,
+		RES.workMonth,
+		RES.workDate,
+		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as talOverTime
+		FROM (
+		SELECT
+		MP.id AS id,
+		MP.part_name AS partName,
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		MW.work_date AS workDate,
+		SUM(
+		CASE WHEN ( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 ) THEN TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) * 2
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) END) AS talOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.id = #{query.partId}
+		AND MW.work_date <![CDATA[ >= ]]> DATE_FORMAT( SUBDATE(#{query.workStartDate},DATE_FORMAT(#{query.workStartDate},'%w')-1), '%Y-%m-%d')
+		AND MW.work_date <![CDATA[ <= ]]> DATE_FORMAT( SUBDATE(#{query.workStartDate},DATE_FORMAT(#{query.workStartDate},'%w')-7), '%Y-%m-%d')
+		GROUP BY
+		MP.id,
+		MP.part_name,
+		MW.work_year,
+		MW.work_month,
+		MW.work_date
+		UNION ALL
+		SELECT
+		MP.id AS id,
+		MP.part_name AS partName,
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		MW.work_date AS workDate,
+		SUM(
+		CASE WHEN ( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 ) THEN TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) * 2
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '17:30:00' ) ) END) as talOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.id = #{query.partId}
+		AND MW.work_date <![CDATA[ >= ]]> DATE_FORMAT( SUBDATE(DATE_ADD(#{query.workStartDate},INTERVAL -1 YEAR),DATE_FORMAT(DATE_ADD(#{query.workStartDate},INTERVAL -1 YEAR),'%w')-1), '%Y-%m-%d')
+		AND MW.work_date <![CDATA[ <= ]]> DATE_FORMAT( SUBDATE(DATE_ADD(#{query.workStartDate},INTERVAL -1 YEAR),DATE_FORMAT(DATE_ADD(#{query.workStartDate},INTERVAL -1 YEAR),'%w')-7), '%Y-%m-%d')
+		GROUP BY
+		MP.id,
+		MP.part_name,
+		MW.work_year,
+		MW.work_month,
+		MW.work_date
+		) RES
+		GROUP BY
+		RES.id,
+		RES.partName,
+		RES.workYear,
+		RES.workMonth,
+		RES.workDate
+	</select>
+
 </mapper>   
