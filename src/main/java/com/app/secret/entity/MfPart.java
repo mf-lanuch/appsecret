@@ -1,7 +1,9 @@
 package com.app.secret.entity;
 
-public class MfPart {
+import javax.persistence.Id;
 
+public class MfPart {
+	@Id
 	private java.lang.String id; // 主键
 	private java.lang.String partName; // 中心名
 	private java.util.Date insertTime; // 插入时间

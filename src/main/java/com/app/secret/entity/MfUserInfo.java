@@ -1,7 +1,9 @@
 package com.app.secret.entity;
 
-public class MfUserInfo {
+import javax.persistence.Id;
 
+public class MfUserInfo {
+	@Id
 	private java.lang.String id; // 主键
 	private java.lang.String pcode; // 工号
 	private java.lang.String pname; // 姓名

@@ -1,7 +1,10 @@
 package com.app.secret.entity;
 
+import javax.persistence.Id;
+
 public class MfMagnification {
 
+	@Id
 	private java.lang.String id; // 主键
 	private java.lang.Integer workDateType; // 工作日类型：1工作日 2周末 3节假日
 	private java.lang.Integer magValue; // 倍率

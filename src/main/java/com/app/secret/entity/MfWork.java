@@ -1,7 +1,9 @@
 package com.app.secret.entity;
 
-public class MfWork {
+import javax.persistence.Id;
 
+public class MfWork {
+	@Id
 	private java.lang.String id; // 主键
 	private java.lang.String userId; // 关联用户ID
 	private java.util.Date workDate; // 工作日期
