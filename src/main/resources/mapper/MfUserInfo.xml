@@ -85,47 +85,48 @@
         t.work_month AS workMonth,
         time_format( SEC_TO_TIME( sum( t.ot ) ), '%H:%I:%S' ) AS totalOverTime
         FROM
-            (
+        (
         SELECT
-            mui.pname,
-            mui.pcode,
-            mw.work_year,
-            mw.work_month,
-            SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+        mui.pname,
+        mui.pcode,
+        mw.work_year,
+        mw.work_month,
+        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
         FROM
-            mf_user_info mui
-            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        mf_user_info mui
+        LEFT JOIN mf_work mw ON mui.id = mw.user_id
         WHERE
-            1 = 1
-            <if test="query.pcode != null and query.pcode != ''">
-                AND mui.pcode = #{query.pcode}
-            </if>
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
-            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-            UNION all
-            SELECT
-            mui.pname,
-            mui.pcode,
-            mw.work_year,
-            mw.work_month,
-            ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * (select t.mag_value from mf_magnification t where t.work_date_type = 2) ) AS ot
+        1 = 1
+        <if test="query.pcode != null and query.pcode != ''">
+            AND mui.pcode = #{query.pcode}
+        </if>
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+        AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+        UNION all
+        SELECT
+        mui.pname,
+        mui.pcode,
+        mw.work_year,
+        mw.work_month,
+        ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * (select t.mag_value from mf_magnification t where
+        t.work_date_type = 2) ) AS ot
         FROM
-            mf_user_info mui
-            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        mf_user_info mui
+        LEFT JOIN mf_work mw ON mui.id = mw.user_id
         WHERE
-            1 = 1
-            <if test="query.pcode != null and query.pcode != ''">
-                AND mui.pcode = #{query.pcode}
-            </if>
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
-            AND mw.`week` IN ( 6, 7 )
-            ) t;
+        1 = 1
+        <if test="query.pcode != null and query.pcode != ''">
+            AND mui.pcode = #{query.pcode}
+        </if>
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+        AND mw.`week` IN ( 6, 7 )
+        ) t;
     </select>
 
     <select id="getPersonalAttenceList" resultType="com.app.secret.core.vo.PersonalAttenceListVO">
@@ -151,4 +152,141 @@
         mw.work_date
     </select>
 
+    <select id="listPersonaOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+        SELECT
+            t.pname AS pname,
+            t.pcode AS pcode,
+            t.work_year AS workYear,
+            t.work_month AS workMonth,
+            t.totalOverTime AS totalOverTime
+        FROM
+            (
+        SELECT
+            a.pname AS pname,
+            a.pcode AS pcode,
+            a.work_year AS work_year,
+            a.work_month AS work_month,
+            time_format( SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ), '%H:%I:%S' ) AS totalOverTime
+        FROM
+            (
+        SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            (
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+            ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            AND MUI.is_it = 1
+            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            <if test="query.pname != null and query.pname != ''">
+                AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
+            </if>
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+        UNION ALL
+        SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            (
+            TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
+            ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            AND MUI.is_it = 1
+            AND MW.`week` IN ( 6, 7 )
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            <if test="query.pname != null and query.pname != ''">
+                AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
+            </if>
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+            ) a
+        GROUP BY
+            a.pcode UNION ALL
+        SELECT
+            a.pname AS pname,
+            a.pcode AS pcode,
+            a.work_year AS work_year,
+            a.work_month AS work_month,
+            time_format( SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ), '%H:%I:%S' ) AS totalOverTime
+        FROM
+            (
+        SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            (
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+            ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            AND MUI.is_it = 0
+            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            <if test="query.pname != null and query.pname != ''">
+                AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
+            </if>
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+            UNION ALL
+        SELECT
+            mui.pname,
+            mui.pcode,
+            mw.work_year,
+            mw.work_month,
+            (
+            TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
+            ) AS ot
+        FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+            1 = 1
+            AND MUI.is_it = 0
+            AND MW.`week` IN ( 6, 7 )
+            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            <if test="query.pname != null and query.pname != ''">
+                AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
+            </if>
+            <if test="query.pcode != null and query.pcode != ''">
+                AND mui.pcode = #{query.pcode}
+            </if>
+            ) a
+        GROUP BY
+            a.pcode
+            ) t
+        ORDER BY
+	totalOverTime DESC
+    </select>
 </mapper>   

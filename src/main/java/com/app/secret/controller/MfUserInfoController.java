@@ -2,6 +2,7 @@ package com.app.secret.controller;
 
 import com.app.secret.core.base.annotation.IgnoreAccessToken;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.AjaxResult;
 import com.app.secret.core.vo.PartOverTimeVO;
@@ -53,4 +54,9 @@ public class MfUserInfoController {
         }
     }
 
+    @ApiOperation(value = "获取员工的加班统计列表")
+    @RequestMapping(value = "/listPersonaOvertime", method = RequestMethod.POST)
+    public AjaxResult<List<PersonaOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
+        return AjaxResult.success(mfUserInfoService.listPersonaOvertime(dto));
+    }
 }

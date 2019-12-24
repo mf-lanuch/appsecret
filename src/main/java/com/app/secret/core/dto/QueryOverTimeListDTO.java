@@ -32,8 +32,4 @@ public class QueryOverTimeListDTO {
     @ApiModelProperty(value = "工号")
     private String pcode;
 
-    @ApiModelProperty(value = "部门Id")
-    private String partId;
-
-
 }

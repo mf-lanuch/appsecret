@@ -1,6 +1,7 @@
 package com.app.secret.services.impl;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.PersonaOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
@@ -54,6 +55,11 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
     public List<PersonalAttenceListVO> getPersonalAttenceList(
         PersonalAttenceReq personalAttenceReq) {
         return mfUserInfoMapper.getPersonalAttenceList(personalAttenceReq);
+    }
+
+    @Override
+    public List<PersonaOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto) {
+        return mfUserInfoMapper.listPersonaOvertime(dto);
     }
 }
 
