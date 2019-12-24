@@ -111,7 +111,7 @@
             mui.pcode,
             mw.work_year,
             mw.work_month,
-            ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * 2 ) AS ot
+            ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * (select t.mag_value from mf_magnification t where t.work_date_type = 2) ) AS ot
         FROM
             mf_user_info mui
             LEFT JOIN mf_work mw ON mui.id = mw.user_id
