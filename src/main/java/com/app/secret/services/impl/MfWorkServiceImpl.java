@@ -36,8 +36,9 @@ public class MfWorkServiceImpl implements MfWorkService {
 		if (mfUserInfoService.judgeIT(query.getPcode())) {
 			// it
 			return mfWorkMapper.listItPersonalOtDetail(query);
+
 		}
-		return null;
+		return mfWorkMapper.listPersonalOtDetail(query);
 	}
 
 }

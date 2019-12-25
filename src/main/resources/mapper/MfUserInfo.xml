@@ -62,7 +62,7 @@
         mui.pcode,
         mw.work_year,
         mw.work_month,
-        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) ) AS ot
         FROM
         mf_user_info mui
         LEFT JOIN mf_work mw ON mui.id = mw.user_id
@@ -91,7 +91,7 @@
         mui.pcode,
         mw.work_year,
         mw.work_month,
-        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) ) AS ot
+        SUM( TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) ) AS ot
         FROM
         mf_user_info mui
         LEFT JOIN mf_work mw ON mui.id = mw.user_id
@@ -175,7 +175,7 @@
             mw.work_year,
             mw.work_month,
             (
-            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
             ) AS ot
         FROM
             mf_user_info mui
@@ -237,7 +237,7 @@
             mw.work_year,
             mw.work_month,
             (
-            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
             ) AS ot
         FROM
             mf_user_info mui

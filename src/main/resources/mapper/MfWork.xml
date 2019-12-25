@@ -1,116 +1,181 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.app.secret.mapper.MfWorkMapper">
-	<resultMap type="com.app.secret.entity.MfWork" id="BaseResultMap">
-		<result column="id" property="id" />
-		<result column="user_id" property="userId" />
-		<result column="work_date" property="workDate" />
-		<result column="week" property="week" />
-		<result column="work_year" property="workYear" />
-		<result column="work_month" property="workMonth" />
-		<result column="status" property="status" />
-		<result column="start_time" property="startTime" />
-		<result column="end_time" property="endTime" />
-		<result column="insert_time" property="insertTime" />
-		<result column="update_time" property="updateTime" />
-	</resultMap>
+    <resultMap type="com.app.secret.entity.MfWork" id="BaseResultMap">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="work_date" property="workDate"/>
+        <result column="week" property="week"/>
+        <result column="work_year" property="workYear"/>
+        <result column="work_month" property="workMonth"/>
+        <result column="status" property="status"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="insert_time" property="insertTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
 
-	<sql id="defaultSelectClause">
+    <sql id="defaultSelectClause">
 		t.id as id, t.user_id as userId, t.work_date as workDate, t.week as
 		week, t.work_year as workYear, t.work_month as workMonth, t.status
 		as status, t.start_time as startTime, t.end_time as endTime,
 		t.insert_time as insertTime, t.update_time as updateTime
 	</sql>
 
-	<select id="selectList"
-		parameterType="com.app.secret.entity.MfWork" resultMap="BaseResultMap">
-		SELECT
-		<include refid="defaultSelectClause" />
-		from mf_work t
-		<include refid="defaultWhereClause" />
+    <select id="selectList"
+            parameterType="com.app.secret.entity.MfWork" resultMap="BaseResultMap">
+        SELECT
+        <include refid="defaultSelectClause"/>
+        from mf_work t
+        <include refid="defaultWhereClause"/>
 
-	</select>
+    </select>
 
-	<sql id="defaultWhereClause">
-		<trim prefix="where" prefixOverrides="and|or">
-			<if test="id != null">and t.id = #{id}</if>
-			<if test="userId != null">and t.user_id = #{userId}</if>
-			<if test="workDate != null">and t.work_date = #{workDate}</if>
-			<if test="week != null">and t.week = #{week}</if>
-			<if test="workYear != null">and t.work_year = #{workYear}</if>
-			<if test="workMonth != null">and t.work_month = #{workMonth}</if>
-			<if test="status != null">and t.status = #{status}</if>
-			<if test="startTime != null">and t.start_time = #{startTime}</if>
-			<if test="endTime != null">and t.end_time = #{endTime}</if>
-			<if test="insertTime != null">and t.insert_time = #{insertTime}</if>
-			<if test="updateTime != null">and t.update_time = #{updateTime}</if>
-		</trim>
-	</sql>
+    <sql id="defaultWhereClause">
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">and t.id = #{id}</if>
+            <if test="userId != null">and t.user_id = #{userId}</if>
+            <if test="workDate != null">and t.work_date = #{workDate}</if>
+            <if test="week != null">and t.week = #{week}</if>
+            <if test="workYear != null">and t.work_year = #{workYear}</if>
+            <if test="workMonth != null">and t.work_month = #{workMonth}</if>
+            <if test="status != null">and t.status = #{status}</if>
+            <if test="startTime != null">and t.start_time = #{startTime}</if>
+            <if test="endTime != null">and t.end_time = #{endTime}</if>
+            <if test="insertTime != null">and t.insert_time = #{insertTime}</if>
+            <if test="updateTime != null">and t.update_time = #{updateTime}</if>
+        </trim>
+    </sql>
 
-	<select id="listItPersonalOtDetail" resultType="com.app.secret.core.vo.PersonalOtDetailVO">
-		SELECT
-			t.pname,
-			t.pcode,
-			t.workDate,
-			t.startTime,
-			t.endTime,
-			t.ot
-		FROM
-			(
-		SELECT
-			mui.pname AS pname,
-			mui.pcode AS pcode,
-			mw.work_year AS workYear,
-			mw.work_month AS workMonth,
-			mw.work_date AS workDate,
-			mw.start_time AS startTime,
-			mw.end_time AS endTime,
-			SEC_TO_TIME(
-			TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
-			) AS ot
-		FROM
-			mf_user_info mui
-			LEFT JOIN mf_work mw ON mui.id = mw.user_id
-		WHERE
-			1 = 1
-			AND MUI.is_it = 1
-			AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-			<if test="query.workYear != ''">
-				AND mw.work_year = #{query.workYear}
-			</if>
-			<if test="query.workMonth != ''">
-				AND mw.work_month = #{query.workMonth}
-			</if>
-			AND MUI.pcode = #{query.pcode}
-		UNION ALL
-		SELECT
-			mui.pname AS pname,
-			mui.pcode AS pcode,
-			mw.work_year AS workYear,
-			mw.work_month AS workMonth,
-			mw.work_date AS workDate,
-			mw.start_time AS startTime,
-			mw.end_time AS endTime,
-			SEC_TO_TIME(
-			TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
-			) AS ot
-		FROM
-			mf_user_info mui
-			LEFT JOIN mf_work mw ON mui.id = mw.user_id
-		WHERE
-			1 = 1
-			AND MUI.is_it = 1
-			AND MW.`week` IN ( 6, 7 )
-			<if test="query.workYear != ''">
-				AND mw.work_year = #{query.workYear}
-			</if>
-			<if test="query.workMonth != ''">
-				AND mw.work_month = #{query.workMonth}
-			</if>
-			AND MUI.pcode = #{query.pcode}
-			) t
-		ORDER BY t.workDate ASC
-	</select>
+    <select id="listItPersonalOtDetail" resultType="com.app.secret.core.vo.PersonalOtDetailVO">
+        SELECT
+        t.pname,
+        t.pcode,
+        t.workDate,
+        t.startTime,
+        t.endTime,
+        (case when (t.dow IN ( 1, 2, 3, 4, 5 )) then '16:30:00'
+        when (t.dow in (6,7)) then t.startTime
+        end) as otStartTime,
+        t.ot,
+        t.endTime as otEndTime
+        FROM
+        (
+            SELECT
+            mui.pname AS pname,
+            mui.pcode AS pcode,
+            mw.work_year AS workYear,
+            mw.work_month AS workMonth,
+            mw.work_date AS workDate,
+            mw.start_time AS startTime,
+            mw.end_time AS endTime,
+            MW.`week` as dow,
+            SEC_TO_TIME(
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT
+            t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+            ) AS ot
+            FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+            WHERE
+            1 = 1
+            AND MUI.is_it = 1
+            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+            AND mw.work_year = #{query.workYear}
+            AND mw.work_month = #{query.workMonth}
+            AND MUI.pcode = #{query.pcode}
+            UNION ALL
+            SELECT
+            mui.pname AS pname,
+            mui.pcode AS pcode,
+            mw.work_year AS workYear,
+            mw.work_month AS workMonth,
+            mw.work_date AS workDate,
+            mw.start_time AS startTime,
+            mw.end_time AS endTime,
+            MW.`week` as dow,
+            SEC_TO_TIME(
+            TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification_it t
+            WHERE t.work_date_type = 2 )
+            ) AS ot
+            FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+            WHERE
+            1 = 1
+            AND MUI.is_it = 1
+            AND MW.`week` IN ( 6, 7 )
+            AND mw.work_year = #{query.workYear}
+            AND mw.work_month = #{query.workMonth}
+            AND MUI.pcode = #{query.pcode}
+        ) t
+        ORDER BY t.workDate ASC
+    </select>
+
+    <select id="listPersonalOtDetail" resultType="com.app.secret.core.vo.PersonalOtDetailVO">
+        SELECT
+        t.pname,
+        t.pcode,
+        t.workDate,
+        t.startTime,
+        t.endTime,
+        (case when (t.dow IN ( 1, 2, 3, 4, 5 )) then '16:30:00'
+        when (t.dow in (6,7)) then t.startTime
+        end) as otStartTime,
+        t.ot,
+        t.endTime as otEndTime
+        FROM
+        (
+            SELECT
+            mui.pname AS pname,
+            mui.pcode AS pcode,
+            mw.work_year AS workYear,
+            mw.work_month AS workMonth,
+            mw.work_date AS workDate,
+            mw.start_time AS startTime,
+            mw.end_time AS endTime,
+            MW.`week` as dow,
+            SEC_TO_TIME(
+            TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT
+            t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+            ) AS ot
+            FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+            WHERE
+            1 = 1
+            AND MUI.is_it = 0
+            AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+            AND mw.work_year = #{query.workYear}
+            AND mw.work_month = #{query.workMonth}
+            AND MUI.pcode = #{query.pcode}
+            UNION ALL
+            SELECT
+            mui.pname AS pname,
+            mui.pcode AS pcode,
+            mw.work_year AS workYear,
+            mw.work_month AS workMonth,
+            mw.work_date AS workDate,
+            mw.start_time AS startTime,
+            mw.end_time AS endTime,
+            MW.`week` as dow,
+            SEC_TO_TIME(
+            TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE
+            t.work_date_type = 2 )
+            ) AS ot
+            FROM
+            mf_user_info mui
+            LEFT JOIN mf_work mw ON mui.id = mw.user_id
+            WHERE
+            1 = 1
+            AND MUI.is_it = 0
+            AND MW.`week` IN ( 6, 7 )
+            AND mw.work_year = #{query.workYear}
+            AND mw.work_month = #{query.workMonth}
+            AND MUI.pcode = #{query.pcode}
+        ) t
+        ORDER BY t.workDate ASC
+    </select>
 </mapper>   

@@ -18,5 +18,17 @@ public interface MfWorkMapper extends BaseMapper<MfWork> {
      * @return
      */
     List<PersonalOtDetailVO> listItPersonalOtDetail(@Param("query") QueryPersonalOtDetailDTO query);
+
+//    List<PersonalOtDetailVO> listItPersonalOtDetail(@Param("workYear") Integer workYear,
+//                                                    @Param("workMonth") Integer workMonth,
+//                                                    @Param("pcode") String pcode);
+
+    /**
+     * 员工的加班明细
+     *
+     * @param query
+     * @return
+     */
+    List<PersonalOtDetailVO> listPersonalOtDetail(@Param("query") QueryPersonalOtDetailDTO query);
 }
 

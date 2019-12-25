@@ -20,19 +20,22 @@ public class PersonalOtDetailVO {
     private String pname;
 
     @ApiModelProperty("工作日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date workDate;
 
     @ApiModelProperty("加班开始时间")
-    private java.util.Date otStartTime;
+    private String otStartTime;
+
+    @ApiModelProperty("加班结束时间")
+    private String otEndTime;
 
     @ApiModelProperty("上班刷卡")
-    private java.util.Date startTime;
+    private java.sql.Time startTime;
 
     @ApiModelProperty("下班刷卡（结束时间）")
-    private java.util.Date endTime;
+    private java.sql.Time endTime;
 
     @ApiModelProperty("加班时长（小时）")
-    private String overTime;
+    private String ot;
 
 }
