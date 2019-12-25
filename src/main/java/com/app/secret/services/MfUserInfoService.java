@@ -7,7 +7,7 @@ import com.app.secret.core.vo.PersonalAttenceListVO;
 import java.util.List;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
-import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.entity.MfUserInfo;
 
 public interface MfUserInfoService {
@@ -17,7 +17,7 @@ public interface MfUserInfoService {
      * @param query
      * @return
      */
-    PersonaOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query);
+    PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query);
 
     /**
      * 判断员工是否为IT人员
@@ -43,6 +43,6 @@ public interface MfUserInfoService {
      * @param dto
      * @return
      */
-    List<PersonaOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto);
+    List<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto);
 }
 

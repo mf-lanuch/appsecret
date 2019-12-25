@@ -48,7 +48,7 @@
         </trim>
     </sql>
 
-    <select id="getITPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+    <select id="getITPersonalOvertime" resultType="com.app.secret.core.vo.PersonalOvertimeVO">
         SELECT
         t.pname as pname,
         t.pcode as pcode,
@@ -77,7 +77,7 @@
         ) t;
     </select>
 
-    <select id="getPersonalOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+    <select id="getPersonalOvertime" resultType="com.app.secret.core.vo.PersonalOvertimeVO">
         SELECT
         t.pname AS pname,
         t.pcode AS pcode,
@@ -152,7 +152,7 @@
         mw.work_date
     </select>
 
-    <select id="listPersonaOvertime" resultType="com.app.secret.core.vo.PersonaOvertimeVO">
+    <select id="listPersonaOvertime" resultType="com.app.secret.core.vo.PersonalOvertimeVO">
         SELECT
             t.pname AS pname,
             t.pcode AS pcode,

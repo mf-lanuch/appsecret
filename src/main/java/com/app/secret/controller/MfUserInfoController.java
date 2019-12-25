@@ -5,8 +5,7 @@ import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.AjaxResult;
-import com.app.secret.core.vo.PartOverTimeVO;
-import com.app.secret.core.vo.PersonaOvertimeVO;
+import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.services.MfUserInfoService;
 import io.swagger.annotations.Api;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +30,7 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工个人加班时长")
     @RequestMapping(value = "/getPersonalOvertime", method = RequestMethod.POST)
-    public AjaxResult<PersonaOvertimeVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeDTO query) {
+    public AjaxResult<PersonalOvertimeVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeDTO query) {
         return AjaxResult.success(mfUserInfoService.getPersonalOvertime(query));
     }
 
@@ -56,7 +54,7 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工的加班统计列表")
     @RequestMapping(value = "/listPersonaOvertime", method = RequestMethod.POST)
-    public AjaxResult<List<PersonaOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
+    public AjaxResult<List<PersonalOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
         return AjaxResult.success(mfUserInfoService.listPersonaOvertime(dto));
     }
 }

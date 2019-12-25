@@ -10,7 +10,7 @@ import lombok.Data;
  * @author crsu 2019/12/21
  */
 @Data
-public class PersonaOvertimeVO {
+public class PersonalOvertimeVO {
     @ApiModelProperty("姓名")
     private String pname;
     @ApiModelProperty("工号")
