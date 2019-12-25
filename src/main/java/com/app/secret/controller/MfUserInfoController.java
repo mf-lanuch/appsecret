@@ -3,11 +3,14 @@ package com.app.secret.controller;
 import com.app.secret.core.base.annotation.IgnoreAccessToken;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
+import com.app.secret.core.dto.QueryPersonalOtDetailDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.AjaxResult;
+import com.app.secret.core.vo.PersonalOtDetailVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.services.MfUserInfoService;
+import com.app.secret.services.MfWorkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
@@ -27,6 +30,9 @@ public class MfUserInfoController {
 
     @Autowired
     private MfUserInfoService mfUserInfoService;
+
+    @Autowired
+    private MfWorkService mfWorkService;
 
     @ApiOperation(value = "获取员工个人加班时长")
     @RequestMapping(value = "/getPersonalOvertime", method = RequestMethod.POST)
@@ -56,5 +62,11 @@ public class MfUserInfoController {
     @RequestMapping(value = "/listPersonaOvertime", method = RequestMethod.POST)
     public AjaxResult<List<PersonalOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
         return AjaxResult.success(mfUserInfoService.listPersonaOvertime(dto));
+    }
+
+    @ApiOperation(value = "获取员工的加班明细列表")
+    @RequestMapping(value = "/listPersonalOtDetail", method = RequestMethod.POST)
+    public AjaxResult<List<PersonalOtDetailVO>> listPersonalOtDetail(@RequestBody @Validated QueryPersonalOtDetailDTO dto) {
+        return AjaxResult.success(mfWorkService.listPersonalOtDetail(dto));
     }
 }

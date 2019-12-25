@@ -49,4 +49,68 @@
 		</trim>
 	</sql>
 
+	<select id="listItPersonalOtDetail" resultType="com.app.secret.core.vo.PersonalOtDetailVO">
+		SELECT
+			t.pname,
+			t.pcode,
+			t.workDate,
+			t.startTime,
+			t.endTime,
+			t.ot
+		FROM
+			(
+		SELECT
+			mui.pname AS pname,
+			mui.pcode AS pcode,
+			mw.work_year AS workYear,
+			mw.work_month AS workMonth,
+			mw.work_date AS workDate,
+			mw.start_time AS startTime,
+			mw.end_time AS endTime,
+			SEC_TO_TIME(
+			TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '17:30:00' ) END ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+			) AS ot
+		FROM
+			mf_user_info mui
+			LEFT JOIN mf_work mw ON mui.id = mw.user_id
+		WHERE
+			1 = 1
+			AND MUI.is_it = 1
+			AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+			<if test="query.workYear != ''">
+				AND mw.work_year = #{query.workYear}
+			</if>
+			<if test="query.workMonth != ''">
+				AND mw.work_month = #{query.workMonth}
+			</if>
+			AND MUI.pcode = #{query.pcode}
+		UNION ALL
+		SELECT
+			mui.pname AS pname,
+			mui.pcode AS pcode,
+			mw.work_year AS workYear,
+			mw.work_month AS workMonth,
+			mw.work_date AS workDate,
+			mw.start_time AS startTime,
+			mw.end_time AS endTime,
+			SEC_TO_TIME(
+			TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
+			) AS ot
+		FROM
+			mf_user_info mui
+			LEFT JOIN mf_work mw ON mui.id = mw.user_id
+		WHERE
+			1 = 1
+			AND MUI.is_it = 1
+			AND MW.`week` IN ( 6, 7 )
+			<if test="query.workYear != ''">
+				AND mw.work_year = #{query.workYear}
+			</if>
+			<if test="query.workMonth != ''">
+				AND mw.work_month = #{query.workMonth}
+			</if>
+			AND MUI.pcode = #{query.pcode}
+			) t
+		ORDER BY t.workDate ASC
+	</select>
 </mapper>   
