@@ -129,6 +129,43 @@
         ) t;
     </select>
 
+    <select id="getPersonalOvertimeList" resultType="com.app.secret.core.vo.PersonalOtListVO">
+        SELECT
+        mui.pname,
+        mui.pcode,
+        MW.work_year AS workYear,
+        MW.work_month AS workMonth,
+        MW.work_date AS workDate,
+        time_format(
+        SEC_TO_TIME(
+        SUM(
+        CASE
+        WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
+        WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+        WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
+        WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+        ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END)),'%H:%I:%S') AS talOverTime
+        FROM
+        mf_work MW
+        LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+        LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+        WHERE
+        MW.end_time > '17:30:00'
+        <if test="query.pcode != null and query.pcode != ''">
+            AND mui.pcode = #{query.pcode}
+        </if>
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+        GROUP BY
+        MP.id,
+        MP.part_name,
+        MW.work_year,
+        MW.work_month,
+        MW.work_date
+    </select>
+
     <select id="getPersonalAttenceList" resultType="com.app.secret.core.vo.PersonalAttenceListVO">
         select
         mui.pcode,

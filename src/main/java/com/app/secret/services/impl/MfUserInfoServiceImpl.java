@@ -3,11 +3,14 @@ package com.app.secret.services.impl;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
+import com.app.secret.core.vo.PersonalOtListVO;
+import com.app.secret.core.vo.PersonalOtResVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.entity.MfUserInfo;
 import com.app.secret.mapper.MfUserInfoMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +25,27 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
     private MfUserInfoMapper mfUserInfoMapper;
 
     @Override
-    public PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query) {
+    public PersonalOtResVO getPersonalOvertime(GetPersonalOvertimeDTO query) {
         String pcode = query.getPcode();
+        PersonalOtResVO personalOtResVO = new PersonalOtResVO();
         PersonalOvertimeVO vo;
+        List<PersonalOtListVO> personalOtListVOS = new ArrayList<>();
         if (this.judgeIT(pcode)) {
             // IT 人员
             vo = mfUserInfoMapper.getITPersonalOvertime(query);
-            return vo;
+            // 获取加班明细
+            personalOtListVOS = mfUserInfoMapper.getPersonalOvertimeList(query);
+            personalOtResVO.setPersonalOvertimeVO(vo);
+            personalOtResVO.setPersonalOtListVOS(personalOtListVOS);
+            return personalOtResVO;
         }
         // 非IT
         vo = mfUserInfoMapper.getPersonalOvertime(query);
-        return vo;
+        // 获取加班明细
+        personalOtListVOS = mfUserInfoMapper.getPersonalOvertimeList(query);
+        personalOtResVO.setPersonalOvertimeVO(vo);
+        personalOtResVO.setPersonalOtListVOS(personalOtListVOS);
+        return personalOtResVO;
     }
 
     @Override

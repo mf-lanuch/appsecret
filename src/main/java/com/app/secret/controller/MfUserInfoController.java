@@ -7,6 +7,7 @@ import com.app.secret.core.dto.QueryPersonalOtDetailDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.AjaxResult;
 import com.app.secret.core.vo.PersonalOtDetailVO;
+import com.app.secret.core.vo.PersonalOtResVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.services.MfUserInfoService;
@@ -36,7 +37,7 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工个人加班时长")
     @RequestMapping(value = "/getPersonalOvertime", method = RequestMethod.POST)
-    public AjaxResult<PersonalOvertimeVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeDTO query) {
+    public AjaxResult<PersonalOtResVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeDTO query) {
         return AjaxResult.success(mfUserInfoService.getPersonalOvertime(query));
     }
 

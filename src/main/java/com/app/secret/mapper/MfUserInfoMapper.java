@@ -3,6 +3,7 @@ package com.app.secret.mapper;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
+import com.app.secret.core.vo.PersonalOtListVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.core.vo.PersonalAttenceListVO;
 import com.app.secret.entity.MfUserInfo;
@@ -44,5 +45,13 @@ public interface MfUserInfoMapper extends Mapper<MfUserInfo> {
      * @return
      */
     List<PersonalOvertimeVO> listPersonaOvertime(@Param("query") QueryOverTimeListDTO query);
+
+    /**
+     * 获取员工时间段内加班时长
+     *
+     * @param query
+     * @return
+     */
+    List<PersonalOtListVO> getPersonalOvertimeList(@Param("query") GetPersonalOvertimeDTO query);
 }
 
