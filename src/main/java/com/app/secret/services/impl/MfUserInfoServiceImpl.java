@@ -25,27 +25,17 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
     private MfUserInfoMapper mfUserInfoMapper;
 
     @Override
-    public PersonalOtResVO getPersonalOvertime(GetPersonalOvertimeDTO query) {
+    public PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query) {
         String pcode = query.getPcode();
-        PersonalOtResVO personalOtResVO = new PersonalOtResVO();
         PersonalOvertimeVO vo;
-        List<PersonalOtListVO> personalOtListVOS = new ArrayList<>();
         if (this.judgeIT(pcode)) {
             // IT 人员
             vo = mfUserInfoMapper.getITPersonalOvertime(query);
-            // 获取加班明细
-            personalOtListVOS = mfUserInfoMapper.getPersonalOvertimeList(query);
-            personalOtResVO.setPersonalOvertimeVO(vo);
-            personalOtResVO.setPersonalOtListVOS(personalOtListVOS);
-            return personalOtResVO;
+            return vo;
         }
         // 非IT
         vo = mfUserInfoMapper.getPersonalOvertime(query);
-        // 获取加班明细
-        personalOtListVOS = mfUserInfoMapper.getPersonalOvertimeList(query);
-        personalOtResVO.setPersonalOvertimeVO(vo);
-        personalOtResVO.setPersonalOtListVOS(personalOtListVOS);
-        return personalOtResVO;
+        return vo;
     }
 
     @Override

@@ -21,5 +21,6 @@ public class PersonalOvertimeVO {
     private Integer workMonth;
     @ApiModelProperty("加班时长")
     private String totalOverTime;
-
+    @ApiModelProperty("总工作时长")
+    private String totalWorkTime;
 }

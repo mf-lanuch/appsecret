@@ -18,7 +18,7 @@ public interface MfUserInfoService {
      * @param query
      * @return
      */
-    PersonalOtResVO getPersonalOvertime(GetPersonalOvertimeDTO query);
+    PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query);
 
     /**
      * 判断员工是否为IT人员
