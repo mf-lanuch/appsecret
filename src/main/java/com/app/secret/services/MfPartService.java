@@ -4,6 +4,7 @@ import com.app.secret.core.request.DeptOvertimeReq;
 import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.request.PeriodOvertimeReq;
+import com.app.secret.core.vo.OverTimeForAllVO;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PeriodOverTimeVO;
@@ -30,6 +31,14 @@ public interface MfPartService {
      OverTimeRateVO getOverTimeRate(OvertimeRateReq overtimeRateReq);
 
     /**
+     * 获取公司，传统板块，IT板块加班时长
+     *
+     * @param overtimeRateReq
+     * @return
+     */
+     OverTimeForAllVO getOverTimeForAll(OvertimeRateReq overtimeRateReq);
+
+    /**
      * 获取部门当年每个月加班时长
      *
      * @param deptOvertimeReq
@@ -52,6 +61,8 @@ public interface MfPartService {
      * @return
      */
     List<PeriodOvertimeWeekVO> getPeriodOvertimeWeek(PeriodOvertimeReq periodOvertimeReq);
+
+
 
 }
 

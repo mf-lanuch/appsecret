@@ -16,7 +16,13 @@ public class OvertimeRateDto {
     @ApiModelProperty("工作月份")
     private Integer workMonth;
 
+    @ApiModelProperty("加班时长")
+    private String totalOverTime;
+
     @ApiModelProperty("加班率")
     private double overTimeRate;
+
+    @ApiModelProperty("同期加班率")
+    private double periodOvertimeRate;
 
 }

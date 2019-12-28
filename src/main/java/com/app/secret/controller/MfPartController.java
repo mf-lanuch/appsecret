@@ -6,6 +6,7 @@ import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.request.PeriodOvertimeReq;
 import com.app.secret.core.vo.AjaxResult;
+import com.app.secret.core.vo.OverTimeForAllVO;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PeriodOverTimeVO;
@@ -59,6 +60,24 @@ public class MfPartController {
             res.setStatus(200);
             res.setMessage("SUCCESS");
             res.setObject(overTimeRateVO);
+            return res;
+        }catch (Exception e){
+            res.setStatus(-1);
+            res.setMessage("数据库查询错误");
+            return res;
+        }
+    }
+
+    @ApiOperation(value = "获取公司，传统板块，IT板块加班时长")
+    @RequestMapping(value = "/getOverTimeForAll", method = RequestMethod.POST)
+    public AjaxResult<OverTimeForAllVO> getOverTimeForAll(@RequestBody @Validated OvertimeRateReq overtimeRateReq) {
+        AjaxResult<OverTimeForAllVO> res = new AjaxResult();
+        OverTimeForAllVO overTimeForAllVO = new OverTimeForAllVO();
+        try{
+            overTimeForAllVO = mfPartService.getOverTimeForAll(overtimeRateReq);
+            res.setStatus(200);
+            res.setMessage("SUCCESS");
+            res.setObject(overTimeForAllVO);
             return res;
         }catch (Exception e){
             res.setStatus(-1);

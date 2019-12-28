@@ -5,6 +5,7 @@ import com.app.secret.core.request.DeptOvertimeReq;
 import com.app.secret.core.request.OvertimeRateReq;
 import com.app.secret.core.request.PartOverTimeReq;
 import com.app.secret.core.request.PeriodOvertimeReq;
+import com.app.secret.core.vo.OverTimeForAllVO;
 import com.app.secret.core.vo.OverTimeRateVO;
 import com.app.secret.core.vo.PartOverTimeVO;
 import com.app.secret.core.vo.PeriodOverTimeVO;
@@ -44,6 +45,21 @@ public class MfPartServiceImpl implements MfPartService {
         overTimeRateVO.setTraditionOvertimeRate(
             traditionOverTime == null ? 0 : traditionOverTime.getOverTimeRate());
         return overTimeRateVO;
+    }
+
+    @Override
+    public OverTimeForAllVO getOverTimeForAll(OvertimeRateReq overtimeRateReq) {
+        OverTimeForAllVO overTimeForAllVO = new OverTimeForAllVO();
+        OvertimeRateDto companyOverTime = new OvertimeRateDto();
+        OvertimeRateDto itOverTime = new OvertimeRateDto();
+        OvertimeRateDto traditionOverTime = new OvertimeRateDto();
+        companyOverTime = mfPartMapper.getCompanyOvertimeRate(overtimeRateReq);
+        itOverTime = mfPartMapper.getItOvertimeRate(overtimeRateReq);
+        traditionOverTime = mfPartMapper.getTraditionOvertimeRate(overtimeRateReq);
+        overTimeForAllVO.setCompanyitOvertime(companyOverTime);
+        overTimeForAllVO.setItOvertime(itOverTime);
+        overTimeForAllVO.setTraditionOvertime(traditionOverTime);
+        return overTimeForAllVO;
     }
 
     @Override

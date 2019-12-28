@@ -74,9 +74,18 @@
 
 	<select id="getCompanyOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
+		RES.workYear,
+		RES.workMonth,
+		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.overTimeRate) as overTimeRate,
+		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
+		FROM(
+		SELECT
 		overtime.workYear,
 		overtime.workMonth,
-		overtime.talOverTime/((MWT.work_day * MWT.work_time * 3600 * (select count(1) from mf_user_info))) * 100 as overTimeRate
+		overtime.talOverTime,
+		overtime.talOverTime/((MWT.work_day * MWT.work_time * 3600 * (select count(1) from mf_user_info))) * 100 as overTimeRate,
+		0 AS periodOvertimeRate
 		FROM (
 		SELECT
 		MW.work_year AS workYear,
@@ -106,25 +115,63 @@
 		MW.work_year,
 		MW.work_month ) overtime
 		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear AND MWT.work_month = overtime.workMonth
+		UNION ALL
+		SELECT
+		overtime.workYear +1 as workYear,
+		overtime.workMonth,
+		0 AS totalOverTime,
+		0 as overTimeRate,
+		overtime.talOverTime/((MWT.work_day * MWT.work_time * 3600 * (select count(1) from mf_user_info))) AS periodOvertimeRate
+		FROM (
+		SELECT
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		SUM(
+		CASE
+		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
+		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
+		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) )
+		END
+		) AS talOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		<if test="query.workStartDate != null">
+			AND MW.work_date <![CDATA[ >= ]]> SUBDATE(#{query.workStartDate},interval 1 year)
+		</if>
+		<if test="query.workEndDate != null">
+			AND MW.work_date <![CDATA[ <= ]]> SUBDATE(#{query.workEndDate},interval 1 year)
+		</if>
+		GROUP BY
+		MW.work_year,
+		MW.work_month ) overtime
+		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear AND MWT.work_month = overtime.workMonth ) RES
+		GROUP BY
+		RES.workYear,
+		RES.workMonth
+
+
 	</select>
 
 	<select id="getItOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
+		RES.workYear,
+		RES.workMonth,
+		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.overTimeRate) as overTimeRate,
+		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
+		FROM (
+		SELECT
 		overtime.workYear,
 		overtime.workMonth,
-		overtime.talOverTime / (
-		(
-		MWT.work_day * MWT.work_time * 3600 * (
-		SELECT
-		count( A.id )
-		FROM
-		mf_user_info A
-		LEFT JOIN mf_part B ON A.part_id = B.ID
-		WHERE
-		B.part_name IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
-		)
-		)
-		) * 100 AS overTimeRate
+		overtime.talOverTime,
+		overtime.talOverTime / ((MWT.work_day * MWT.work_time * 3600 * (SELECT count( A.id ) FROM mf_user_info A LEFT JOIN mf_part B ON A.part_id = B.ID WHERE B.part_name IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )))) * 100 AS overTimeRate,
+		0 as periodOvertimeRate
 		FROM
 		(
 		SELECT
@@ -159,47 +206,88 @@
 		) overtime
 		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
 		AND MWT.work_month = overtime.workMonth
+		UNION ALL
+		SELECT
+		overtime.workYear +1,
+		overtime.workMonth,
+		0 AS talOverTime,
+		0 AS overTimeRate,
+		overtime.talOverTime / ((MWT.work_day * MWT.work_time * 3600 * (SELECT count( A.id ) FROM mf_user_info A LEFT JOIN mf_part B ON A.part_id = B.ID WHERE B.part_name IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )))) * 100 as periodOvertimeRate
+		FROM
+		(
+		SELECT
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		SUM(
+		CASE
+
+		WHEN (
+		( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 )
+		) THEN
+		TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * 2 ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) )
+		END
+		) AS talOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.part_name IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
+		<if test="query.workStartDate != null">
+			AND MW.work_date <![CDATA[ >= ]]> SUBDATE(#{query.workStartDate},interval 1 year)
+		</if>
+		<if test="query.workEndDate != null">
+			AND MW.work_date <![CDATA[ <= ]]> SUBDATE(#{query.workEndDate},interval 1 year)
+		</if>
+		GROUP BY
+		MW.work_year,
+		MW.work_month
+		) overtime
+		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
+		AND MWT.work_month = overtime.workMonth ) RES
+		GROUP BY
+		RES.workYear,
+		RES.workMonth
 	</select>
 
 	<select id="getTraditionOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-			overtime.workYear,
-			overtime.workMonth,
-			overtime.talOverTime / (
-			(
-			MWT.work_day * MWT.work_time * 3600 * (
+		RES.workYear,
+		RES.workMonth,
+		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.overTimeRate) as overTimeRate,
+		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
+		FROM (
 		SELECT
-			count( 1 )
+		overtime.workYear,
+		overtime.workMonth,
+		overtime.talOverTime,
+		overtime.talOverTime / ((MWT.work_day * MWT.work_time * 3600 * (SELECT count( 1 ) FROM mf_user_info A LEFT JOIN mf_part B ON A.part_id = B.ID WHERE B.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )))) * 100 AS overTimeRate,
+		0 as periodOvertimeRate
 		FROM
-			mf_user_info A
-			LEFT JOIN mf_part B ON A.part_id = B.ID
-		WHERE
-			B.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
-			)
-			)
-			) * 100 AS overTimeRate
-		FROM
-			(
+		(
 		SELECT
-			MW.work_year AS workYear,
-			MW.work_month AS workMonth,
-			SUM(
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		SUM(
 		CASE
 
-			WHEN (
-			( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
-			AND MW.`week` IN ( 6, 7 )
-			) THEN
-				TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * 2 ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) )
-			END
-			) AS talOverTime
+		WHEN (
+		( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 )
+		) THEN
+		TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * 2 ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) )
+		END
+		) AS talOverTime
 		FROM
-			mf_work MW
-			LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
-			LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
 		WHERE
-			MW.end_time > '17:30:00'
-			AND MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
+		MW.end_time > '17:30:00'
+		AND MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
 		<if test="query.workStartDate != null">
 			AND MW.work_date <![CDATA[ >= ]]> #{query.workStartDate}
 		</if>
@@ -207,11 +295,56 @@
 			AND MW.work_date <![CDATA[ <= ]]> #{query.workEndDate}
 		</if>
 		GROUP BY
-			MW.work_year,
-			MW.work_month
-			) overtime
-			LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
+		MW.work_year,
+		MW.work_month
+		) overtime
+		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
 		AND MWT.work_month = overtime.workMonth
+		UNION ALL
+		SELECT
+		overtime.workYear + 1,
+		overtime.workMonth,
+		0 AS talOverTime,
+		0 AS overTimeRate,
+		overtime.talOverTime / ((MWT.work_day * MWT.work_time * 3600 * (SELECT count( 1 ) FROM mf_user_info A LEFT JOIN mf_part B ON A.part_id = B.ID WHERE B.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )))) * 100 as periodOvertimeRate
+		FROM
+		(
+		SELECT
+		MW.work_year AS workYear,
+		MW.work_month AS workMonth,
+		SUM(
+		CASE
+
+		WHEN (
+		( MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' ) )
+		AND MW.`week` IN ( 6, 7 )
+		) THEN
+		TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * 2 ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) )
+		END
+		) AS talOverTime
+		FROM
+		mf_work MW
+		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
+		LEFT JOIN mf_part MP ON MUI.part_id = MP.id
+		WHERE
+		MW.end_time > '17:30:00'
+		AND MP.part_name NOT IN ( '生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )
+		<if test="query.workStartDate != null">
+			AND MW.work_date <![CDATA[ >= ]]> SUBDATE(#{query.workStartDate},interval 1 year)
+		</if>
+		<if test="query.workEndDate != null">
+			AND MW.work_date <![CDATA[ <= ]]> SUBDATE(#{query.workEndDate},interval 1 year)
+		</if>
+		GROUP BY
+		MW.work_year,
+		MW.work_month
+		) overtime
+		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
+		AND MWT.work_month = overtime.workMonth	) RES
+		GROUP BY
+		RES.workYear,
+		RES.workMonth
+
 	</select>
 
 	<select id="getDeptOvertimeMonth" resultType="com.app.secret.core.vo.PartOverTimeVO">
