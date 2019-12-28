@@ -54,8 +54,8 @@
         t.pcode as pcode,
         t.work_year as workYear,
         t.work_month as workMonth,
-        time_format(SEC_TO_TIME( t.ot ),'%H:%I:%S') AS totalOverTime,
-        time_format(SEC_TO_TIME(t.talWorkTime),'%H:%I:%S') AS totalWorkTime
+        time_format(SEC_TO_TIME( sum(t.ot) ),'%H:%I:%S') AS totalOverTime,
+        time_format(SEC_TO_TIME( sum(t.talWorkTime)),'%H:%I:%S') AS totalWorkTime
         FROM
         (
         SELECT
@@ -81,7 +81,35 @@
         AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
         AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
         AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
-        ) t;
+        AND MW.`week` IN ( 1, 2, 3, 4, 5 )
+        UNION all
+        SELECT
+        mui.pname,
+        mui.pcode,
+        mw.work_year,
+        mw.work_month,
+        ( TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * (select t.mag_value from mf_magnification_it t where
+        t.work_date_type = 2) ) AS ot,
+        (select count(1) from mf_work
+        where 1=1
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}) * 27000 AS talWorkTime
+        FROM
+        mf_user_info mui
+        LEFT JOIN mf_work mw ON mui.id = mw.user_id
+        WHERE
+        1 = 1
+        <if test="query.pcode != null and query.pcode != ''">
+            AND mui.pcode = #{query.pcode}
+        </if>
+        AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
+        AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
+        AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
+        AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+        AND mw.`week` IN ( 6, 7 )
+        ) t
     </select>
 
     <select id="getPersonalOvertime" resultType="com.app.secret.core.vo.PersonalOvertimeVO">
@@ -146,7 +174,7 @@
         AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
         AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
         AND mw.`week` IN ( 6, 7 )
-        ) t;
+        ) t
     </select>
 
     <select id="getPersonalOvertimeList" resultType="com.app.secret.core.vo.PersonalOtListVO">
