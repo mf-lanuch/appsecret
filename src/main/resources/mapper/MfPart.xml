@@ -39,8 +39,6 @@
 		SELECT
 		MP.id AS id,
 		MP.part_name AS partName,
-		MW.work_year AS workYear,
-		MW.work_month AS workMonth,
 		time_format(
 		SEC_TO_TIME(
 		SUM(
@@ -67,9 +65,7 @@
 		</if>
 		GROUP BY
 		MP.id,
-		MP.part_name,
-		MW.work_year,
-		MW.work_month
+		MP.part_name
 	</select>
 
 	<select id="getCompanyOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
