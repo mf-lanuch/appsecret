@@ -13,6 +13,7 @@ import com.app.secret.mapper.MfUserInfoMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,19 +50,20 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
         return true;
     }
 
-	@Override
-	public List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo) {
-		return mfUserInfoMapper.select(userInfo);
-	}
+    @Override
+    public List<MfUserInfo> getMfUserInfoList(MfUserInfo userInfo) {
+        return mfUserInfoMapper.select(userInfo);
+    }
 
     @Override
-    public List<PersonalAttenceListVO> getPersonalAttenceList(
-        PersonalAttenceReq personalAttenceReq) {
+    public List<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq) {
+        PageHelper.startPage(personalAttenceReq.getPageIndex(), personalAttenceReq.getPageSize());
         return mfUserInfoMapper.getPersonalAttenceList(personalAttenceReq);
     }
 
     @Override
     public List<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto) {
+        PageHelper.startPage(dto.getPageIndex(), dto.getPageSize());
         return mfUserInfoMapper.listPersonaOvertime(dto);
     }
 }

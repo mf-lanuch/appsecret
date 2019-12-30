@@ -1,5 +1,6 @@
 package com.app.secret.core.request;
 
+import com.app.secret.core.dto.BasePageQueryRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
@@ -12,7 +13,7 @@ import lombok.Data;
  * @date 2019/12/23 19:52
  */
 @Data
-public class PersonalAttenceReq {
+public class PersonalAttenceReq extends BasePageQueryRequest {
 
     @ApiModelProperty(value = "工号")
     @NotBlank(message = "工号不能为空")

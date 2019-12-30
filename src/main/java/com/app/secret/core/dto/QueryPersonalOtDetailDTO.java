@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * @author crsu 2019/12/25
  */
 @Data
-public class QueryPersonalOtDetailDTO {
+public class QueryPersonalOtDetailDTO extends BasePageQueryRequest {
     @NotNull(message = "工作年份不能为空")
     @ApiModelProperty("工作年份")
     private Integer workYear;
