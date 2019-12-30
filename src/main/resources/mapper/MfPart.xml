@@ -70,8 +70,6 @@
 
 	<select id="getCompanyOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		RES.workYear,
-		RES.workMonth,
 		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
@@ -147,17 +145,12 @@
 		MW.work_year,
 		MW.work_month ) overtime
 		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear AND MWT.work_month = overtime.workMonth ) RES
-		GROUP BY
-		RES.workYear,
-		RES.workMonth
 
 
 	</select>
 
 	<select id="getItOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		RES.workYear,
-		RES.workMonth,
 		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
@@ -243,15 +236,10 @@
 		) overtime
 		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
 		AND MWT.work_month = overtime.workMonth ) RES
-		GROUP BY
-		RES.workYear,
-		RES.workMonth
 	</select>
 
 	<select id="getTraditionOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		RES.workYear,
-		RES.workMonth,
 		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
@@ -337,10 +325,6 @@
 		) overtime
 		LEFT JOIN mf_work_time MWT ON MWT.work_year = overtime.workYear
 		AND MWT.work_month = overtime.workMonth	) RES
-		GROUP BY
-		RES.workYear,
-		RES.workMonth
-
 	</select>
 
 	<select id="getDeptOvertimeMonth" resultType="com.app.secret.core.vo.PartOverTimeVO">

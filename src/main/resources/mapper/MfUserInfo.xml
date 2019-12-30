@@ -374,4 +374,33 @@
         ORDER BY
 	totalOverTime DESC
     </select>
+
+    <select id="getPersonalOverTimeNew" resultType="com.app.secret.core.vo.PersonalOvertimeVO">
+        select
+        mui.pname,
+        mui.pcode,
+        time_format(
+        SEC_TO_TIME(
+        SUM(
+        CASE
+        WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( mw.end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
+        WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( mw.end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
+        WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( mw.end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
+        WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( mw.end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
+        ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END)),'%H:%I:%S') AS totalOverTime,
+        TIME_FORMAT(SEC_TO_TIME((select count(1) from mf_work
+        where 1=1
+        and work_date <![CDATA[ >= ]]> #{query.workStartDate}
+        and work_date <![CDATA[ <= ]]> #{query.workEndDate}) * 27000 ),'%H:%I:%S') AS totalWorkTime
+        from mf_work mw
+        left join mf_user_info mui on mui.id  =  mw.user_id
+        left join mf_part mp on mp.id = mui.part_id
+        where
+        <if test="query.pcode != null and query.pcode != ''">
+            mui.pcode = #{query.pcode}
+        </if>
+        and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+        and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
+
+    </select>
 </mapper>   

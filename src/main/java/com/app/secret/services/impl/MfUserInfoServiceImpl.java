@@ -1,6 +1,7 @@
 package com.app.secret.services.impl;
 
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.PersonalOtListVO;
@@ -26,16 +27,10 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
     private MfUserInfoMapper mfUserInfoMapper;
 
     @Override
-    public PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query) {
+    public PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeNewDTO query) {
         String pcode = query.getPcode();
         PersonalOvertimeVO vo;
-        if (this.judgeIT(pcode)) {
-            // IT 人员
-            vo = mfUserInfoMapper.getITPersonalOvertime(query);
-            return vo;
-        }
-        // 非IT
-        vo = mfUserInfoMapper.getPersonalOvertime(query);
+        vo = mfUserInfoMapper.getPersonalOverTimeNew(query);
         return vo;
     }
 

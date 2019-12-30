@@ -1,5 +1,6 @@
 package com.app.secret.services;
 
+import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
 import com.app.secret.core.vo.PersonalAttenceListVO;
@@ -18,7 +19,7 @@ public interface MfUserInfoService {
      * @param query
      * @return
      */
-    PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeDTO query);
+    PersonalOvertimeVO getPersonalOvertime(GetPersonalOvertimeNewDTO query);
 
     /**
      * 判断员工是否为IT人员

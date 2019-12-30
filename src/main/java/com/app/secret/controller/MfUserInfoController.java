@@ -2,6 +2,7 @@ package com.app.secret.controller;
 
 import com.app.secret.core.base.annotation.IgnoreAccessToken;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
+import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.dto.QueryPersonalOtDetailDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
@@ -37,7 +38,7 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工个人加班时长")
     @RequestMapping(value = "/getPersonalOvertime", method = RequestMethod.POST)
-    public AjaxResult<PersonalOvertimeVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeDTO query) {
+    public AjaxResult<PersonalOvertimeVO> listReportPage(@RequestBody @Validated GetPersonalOvertimeNewDTO query) {
         return AjaxResult.success(mfUserInfoService.getPersonalOvertime(query));
     }
 
