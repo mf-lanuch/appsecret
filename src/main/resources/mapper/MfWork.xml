@@ -60,7 +60,8 @@
         when (t.dow in (6,7)) then t.startTime
         end) as otStartTime,
         t.ot,
-        t.endTime as otEndTime
+        t.endTime as otEndTime,
+        t.actOt
         FROM
         (
             SELECT
@@ -75,7 +76,8 @@
             SEC_TO_TIME(
             TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT
             t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
-            ) AS ot
+            ) AS ot,
+            TIMEDIFF( mw.end_time, '16:30:00' ) as actOt
             FROM
             mf_user_info mui
             LEFT JOIN mf_work mw ON mui.id = mw.user_id
@@ -99,7 +101,8 @@
             SEC_TO_TIME(
             TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification_it t
             WHERE t.work_date_type = 2 )
-            ) AS ot
+            ) AS ot,
+            TIMEDIFF( mw.end_time, mw.start_time ) as actOt
             FROM
             mf_user_info mui
             LEFT JOIN mf_work mw ON mui.id = mw.user_id
@@ -125,7 +128,8 @@
         when (t.dow in (6,7)) then t.startTime
         end) as otStartTime,
         t.ot,
-        t.endTime as otEndTime
+        t.endTime as otEndTime,
+        t.actOt
         FROM
         (
             SELECT
@@ -140,7 +144,8 @@
             SEC_TO_TIME(
             TIME_TO_SEC( ( CASE WHEN mw.end_time > '17:30:00' THEN TIMEDIFF( mw.end_time, '16:30:00' ) END ) ) * ( SELECT
             t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
-            ) AS ot
+            ) AS ot,
+            TIMEDIFF( mw.end_time, '16:30:00' ) as actOt
             FROM
             mf_user_info mui
             LEFT JOIN mf_work mw ON mui.id = mw.user_id
@@ -164,7 +169,8 @@
             SEC_TO_TIME(
             TIME_TO_SEC( ( TIMEDIFF( mw.end_time, mw.start_time ) ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE
             t.work_date_type = 2 )
-            ) AS ot
+            ) AS ot,
+            TIMEDIFF( mw.end_time, mw.start_time ) as actOt
             FROM
             mf_user_info mui
             LEFT JOIN mf_work mw ON mui.id = mw.user_id

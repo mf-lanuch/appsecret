@@ -35,7 +35,10 @@ public class PersonalOtDetailVO {
     @ApiModelProperty("下班刷卡（结束时间）")
     private java.sql.Time endTime;
 
-    @ApiModelProperty("加班时长（小时）")
+    @ApiModelProperty("持续（小时）")
+    private String actOt;
+
+    @ApiModelProperty("折合小时（小时）")
     private String ot;
 
 }
