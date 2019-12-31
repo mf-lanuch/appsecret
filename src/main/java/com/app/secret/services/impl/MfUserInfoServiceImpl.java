@@ -1,9 +1,11 @@
 package com.app.secret.services.impl;
 
+import com.app.secret.core.domain.PageResult;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
+import com.app.secret.core.util.CommonConverter;
 import com.app.secret.core.vo.PersonalOtListVO;
 import com.app.secret.core.vo.PersonalOtResVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,15 +54,15 @@ public class MfUserInfoServiceImpl implements MfUserInfoService {
     }
 
     @Override
-    public List<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq) {
+    public PageResult<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq) {
         PageHelper.startPage(personalAttenceReq.getPageIndex(), personalAttenceReq.getPageSize());
-        return mfUserInfoMapper.getPersonalAttenceList(personalAttenceReq);
+        return CommonConverter.convertToPageResult(new PageInfo<>(mfUserInfoMapper.getPersonalAttenceList(personalAttenceReq)));
     }
 
     @Override
-    public List<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto) {
+    public PageResult<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto) {
         PageHelper.startPage(dto.getPageIndex(), dto.getPageSize());
-        return mfUserInfoMapper.listPersonaOvertime(dto);
+        return CommonConverter.convertToPageResult(new PageInfo<>(mfUserInfoMapper.listPersonaOvertime(dto)));
     }
 }
 
