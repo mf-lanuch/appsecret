@@ -251,7 +251,7 @@
             a.pcode AS pcode,
             a.work_year AS work_year,
             a.work_month AS work_month,
-            SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ) AS totalOverTime
+            sum( IF ( a.pcode != '', a.ot, 0 ) )  AS totalOverTime
         FROM
             (
         SELECT
@@ -309,7 +309,7 @@
             a.pcode AS pcode,
             a.work_year AS work_year,
             a.work_month AS work_month,
-            SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ) AS totalOverTime
+            sum( IF ( a.pcode != '', a.ot, 0 ) )  AS totalOverTime
         FROM
             (
         SELECT
