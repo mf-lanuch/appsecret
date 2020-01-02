@@ -1,9 +1,12 @@
 package com.app.secret.services.impl;
 
+import com.app.secret.core.domain.PageResult;
 import com.app.secret.core.dto.QueryPersonalOtDetailDTO;
+import com.app.secret.core.util.CommonConverter;
 import com.app.secret.core.vo.PersonalOtDetailVO;
 import com.app.secret.services.MfUserInfoService;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +36,14 @@ public class MfWorkServiceImpl implements MfWorkService {
 	}
 
 	@Override
-	public List<PersonalOtDetailVO> listPersonalOtDetail(QueryPersonalOtDetailDTO query) {
+	public PageResult<PersonalOtDetailVO> listPersonalOtDetail(QueryPersonalOtDetailDTO query) {
 		if (mfUserInfoService.judgeIT(query.getPcode())) {
 			// it
 			PageHelper.startPage(query.getPageIndex(), query.getPageSize());
-			return mfWorkMapper.listItPersonalOtDetail(query);
+			return CommonConverter.convertToPageResult(new PageInfo<>(mfWorkMapper.listItPersonalOtDetail(query)));
 		}
 		PageHelper.startPage(query.getPageIndex(), query.getPageSize());
-		return mfWorkMapper.listPersonalOtDetail(query);
+		return CommonConverter.convertToPageResult(new PageInfo<>(mfWorkMapper.listPersonalOtDetail(query)));
 	}
 
 }

@@ -251,7 +251,7 @@
             a.pcode AS pcode,
             a.work_year AS work_year,
             a.work_month AS work_month,
-            time_format( SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ), '%H:%I:%S' ) AS totalOverTime
+            sum( IF ( a.pcode != '', a.ot, 0 ) )  AS totalOverTime
         FROM
             (
         SELECT
@@ -269,10 +269,8 @@
             1 = 1
             AND MUI.is_it = 1
             AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             <if test="query.pname != null and query.pname != ''">
                 AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
             </if>
@@ -295,10 +293,8 @@
             1 = 1
             AND MUI.is_it = 1
             AND MW.`week` IN ( 6, 7 )
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             <if test="query.pname != null and query.pname != ''">
                 AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
             </if>
@@ -313,7 +309,7 @@
             a.pcode AS pcode,
             a.work_year AS work_year,
             a.work_month AS work_month,
-            time_format( SEC_TO_TIME( sum( IF ( a.pcode != '', a.ot, 0 ) ) ), '%H:%I:%S' ) AS totalOverTime
+            sum( IF ( a.pcode != '', a.ot, 0 ) )  AS totalOverTime
         FROM
             (
         SELECT
@@ -331,10 +327,8 @@
             1 = 1
             AND MUI.is_it = 0
             AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             <if test="query.pname != null and query.pname != ''">
                 AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
             </if>
@@ -357,10 +351,8 @@
             1 = 1
             AND MUI.is_it = 0
             AND MW.`week` IN ( 6, 7 )
-            AND mw.work_year <![CDATA[ >= ]]> #{query.workYearStart}
-            AND mw.work_year <![CDATA[ <= ]]> #{query.workYearEnd}
-            AND mw.work_month <![CDATA[ >= ]]> #{query.workMonthStart}
-            AND mw.work_month <![CDATA[ <= ]]> #{query.workMonthEnd}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             <if test="query.pname != null and query.pname != ''">
                 AND mui.pname like "%"#{query.pname, jdbcType=VARCHAR}"%"
             </if>

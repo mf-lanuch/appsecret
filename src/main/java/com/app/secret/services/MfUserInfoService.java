@@ -1,5 +1,6 @@
 package com.app.secret.services;
 
+import com.app.secret.core.domain.PageResult;
 import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
 import com.app.secret.core.request.PersonalAttenceReq;
@@ -37,7 +38,7 @@ public interface MfUserInfoService {
      * @param personalAttenceReq
      * @return
      */
-    List<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq);
+    PageResult<PersonalAttenceListVO> getPersonalAttenceList(PersonalAttenceReq personalAttenceReq);
 
     /**
      * 获取员工的加班统计列表
@@ -45,6 +46,6 @@ public interface MfUserInfoService {
      * @param dto
      * @return
      */
-    List<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto);
+    PageResult<PersonalOvertimeVO> listPersonaOvertime(QueryOverTimeListDTO dto);
 }
 

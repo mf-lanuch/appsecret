@@ -1,30 +1,26 @@
 package com.app.secret.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * @author crsu 2019/12/21
  */
 @Data
 public class QueryOverTimeListDTO extends BasePageQueryRequest {
-    @NotNull(message = "workYearStart不能为空")
-    @ApiModelProperty("起始日期_工作年份")
-    private Integer workYearStart;
+    @NotNull
+    @ApiModelProperty(value = "开始日期")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date workStartDate;
 
-    @NotNull(message = "workMonthStart不能为空")
-    @ApiModelProperty("起始日期_工作月份")
-    private Integer workMonthStart;
-
-    @NotNull(message = "workYearEnd不能为空")
-    @ApiModelProperty("终止日期_工作年份")
-    private Integer workYearEnd;
-
-    @NotNull(message = "workMonthEnd不能为空")
-    @ApiModelProperty("终止日期_工作月份")
-    private Integer workMonthEnd;
+    @NotNull
+    @ApiModelProperty(value = "结束日期")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date workEndDate;
 
     @ApiModelProperty("姓名")
     private String pname;

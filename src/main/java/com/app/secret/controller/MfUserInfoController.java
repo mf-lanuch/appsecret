@@ -1,6 +1,7 @@
 package com.app.secret.controller;
 
 import com.app.secret.core.base.annotation.IgnoreAccessToken;
+import com.app.secret.core.domain.PageResult;
 import com.app.secret.core.dto.GetPersonalOvertimeDTO;
 import com.app.secret.core.dto.GetPersonalOvertimeNewDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
@@ -44,9 +45,9 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工考勤明细")
     @RequestMapping(value = "/getPersonalAttenceList", method = RequestMethod.POST)
-    public AjaxResult<List<PersonalAttenceListVO>> getPersonalAttenceList(@RequestBody @Validated PersonalAttenceReq personalAttenceReq) {
-        AjaxResult<List<PersonalAttenceListVO>> res = new AjaxResult();
-        List<PersonalAttenceListVO> resList = new ArrayList<>();
+    public AjaxResult<PageResult<PersonalAttenceListVO>> getPersonalAttenceList(@RequestBody @Validated PersonalAttenceReq personalAttenceReq) {
+        AjaxResult<PageResult<PersonalAttenceListVO>> res = new AjaxResult();
+        PageResult<PersonalAttenceListVO> resList;
         try{
             resList = mfUserInfoService.getPersonalAttenceList(personalAttenceReq);
             res.setStatus(200);
@@ -62,13 +63,13 @@ public class MfUserInfoController {
 
     @ApiOperation(value = "获取员工的加班统计列表")
     @RequestMapping(value = "/listPersonaOvertime", method = RequestMethod.POST)
-    public AjaxResult<List<PersonalOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
+    public AjaxResult<PageResult<PersonalOvertimeVO>> listPersonaOvertime(@RequestBody @Validated QueryOverTimeListDTO dto) {
         return AjaxResult.success(mfUserInfoService.listPersonaOvertime(dto));
     }
 
     @ApiOperation(value = "获取员工的加班明细列表")
     @RequestMapping(value = "/listPersonalOtDetail", method = RequestMethod.POST)
-    public AjaxResult<List<PersonalOtDetailVO>> listPersonalOtDetail(@RequestBody @Validated QueryPersonalOtDetailDTO dto) {
+    public AjaxResult<PageResult<PersonalOtDetailVO>> listPersonalOtDetail(@RequestBody @Validated QueryPersonalOtDetailDTO dto) {
         return AjaxResult.success(mfWorkService.listPersonalOtDetail(dto));
     }
 }
