@@ -27,6 +27,6 @@ public class PeriodOvertimeWeekVO {
     private Date workDate;
 
     @ApiModelProperty("加班时长")
-    private String talOverTime;
+    private int talOverTime;
 
 }

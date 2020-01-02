@@ -18,6 +18,6 @@ public class PartOverTimeVO {
     private String partName;
 
     @ApiModelProperty("加班时长")
-    private String talOverTime;
+    private int talOverTime;
 
 }

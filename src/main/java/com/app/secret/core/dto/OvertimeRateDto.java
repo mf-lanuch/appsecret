@@ -11,7 +11,7 @@ import lombok.Data;
 public class OvertimeRateDto {
 
     @ApiModelProperty("加班时长")
-    private String totalOverTime;
+    private int totalOverTime;
 
     @ApiModelProperty("加班率")
     private double overTimeRate;

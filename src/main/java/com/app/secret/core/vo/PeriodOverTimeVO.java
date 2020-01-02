@@ -23,10 +23,10 @@ public class PeriodOverTimeVO {
     private Integer workMonth;
 
     @ApiModelProperty("加班时长")
-    private String talOverTime;
+    private int talOverTime;
 
     @ApiModelProperty("同期加班时长")
-    private String lastOverTime;
+    private int lastOverTime;
 
 
 }

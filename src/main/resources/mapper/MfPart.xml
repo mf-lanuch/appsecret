@@ -39,15 +39,13 @@
 		SELECT
 		MP.id AS id,
 		MP.part_name AS partName,
-		time_format(
-		SEC_TO_TIME(
 		SUM(
 		CASE
 		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
 		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
 		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
 		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
-		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END)),'%H:%I:%S') AS talOverTime
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END) AS talOverTime
 		FROM
 		mf_work MW
 		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
@@ -70,7 +68,7 @@
 
 	<select id="getCompanyOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.talOverTime) as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
 		FROM(
@@ -151,7 +149,7 @@
 
 	<select id="getItOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.talOverTime) as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
 		FROM (
@@ -240,7 +238,7 @@
 
 	<select id="getTraditionOvertimeRate" resultType="com.app.secret.core.dto.OvertimeRateDto">
 		SELECT
-		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as totalOverTime,
+		SUM(RES.talOverTime) as totalOverTime,
 		SUM(RES.overTimeRate) as overTimeRate,
 		SUM(RES.periodOvertimeRate) AS periodOvertimeRate
 		FROM (
@@ -333,15 +331,13 @@
 		MP.part_name AS partName,
 		MW.work_year AS workYear,
 		MW.work_month AS workMonth,
-		time_format(
-		SEC_TO_TIME(
 		SUM(
 		CASE
 		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 2 )
 		WHEN (( MP.part_name NOT IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification t WHERE t.work_date_type = 1 )
 		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN ( 6, 7 )) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 2 )
 		WHEN (( MP.part_name IN ('生产运行开发中心', '质控中心', '商务营销开发中心', '行政服务开发中心' )) AND MW.`week` IN (1,2,3,4,5)) THEN TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) * ( SELECT t.mag_value FROM mf_magnification_it t WHERE t.work_date_type = 1 )
-		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END)),'%H:%I:%S') AS talOverTime
+		ELSE TIME_TO_SEC( TIMEDIFF( end_time, '16:30:00' ) ) END) AS talOverTime
 		FROM
 		mf_work MW
 		LEFT JOIN mf_user_info MUI ON MW.user_id = MUI.id
@@ -368,8 +364,8 @@
 		RES.partName,
 		RES.workYear,
 		RES.workMonth,
-		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as talOverTime,
-		time_format(SEC_TO_TIME(SUM(RES.lastOverTime)),'%H:%I:%S') as lastOverTime
+		SUM(RES.talOverTime) as talOverTime,
+		SUM(RES.lastOverTime) as lastOverTime
 		FROM (
 		SELECT
 		MP.id AS id,
@@ -445,7 +441,7 @@
 		RES.workYear,
 		RES.workMonth,
 		RES.workDate,
-		time_format(SEC_TO_TIME(SUM(RES.talOverTime)),'%H:%I:%S') as talOverTime
+		SUM(RES.talOverTime) as talOverTime
 		FROM (
 		SELECT
 		MP.id AS id,
