@@ -85,8 +85,8 @@
             1 = 1
             AND MUI.is_it = 1
             AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-            AND mw.work_year = #{query.workYear}
-            AND mw.work_month = #{query.workMonth}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             AND MUI.pcode = #{query.pcode}
             UNION ALL
             SELECT
@@ -110,8 +110,8 @@
             1 = 1
             AND MUI.is_it = 1
             AND MW.`week` IN ( 6, 7 )
-            AND mw.work_year = #{query.workYear}
-            AND mw.work_month = #{query.workMonth}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             AND MUI.pcode = #{query.pcode}
         ) t
         ORDER BY t.workDate ASC
@@ -153,8 +153,8 @@
             1 = 1
             AND MUI.is_it = 0
             AND MW.`week` IN ( 1, 2, 3, 4, 5 )
-            AND mw.work_year = #{query.workYear}
-            AND mw.work_month = #{query.workMonth}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             AND MUI.pcode = #{query.pcode}
             UNION ALL
             SELECT
@@ -178,8 +178,8 @@
             1 = 1
             AND MUI.is_it = 0
             AND MW.`week` IN ( 6, 7 )
-            AND mw.work_year = #{query.workYear}
-            AND mw.work_month = #{query.workMonth}
+            and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
+            and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
             AND MUI.pcode = #{query.pcode}
         ) t
         ORDER BY t.workDate ASC
