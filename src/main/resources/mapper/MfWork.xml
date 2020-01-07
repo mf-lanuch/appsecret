@@ -87,7 +87,9 @@
             AND MW.`week` IN ( 1, 2, 3, 4, 5 )
             and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
             and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
-            AND MUI.pcode = #{query.pcode}
+            <if test="query.pcode != null and query.pcode != ''">
+                AND MUI.pcode = #{query.pcode}
+            </if>
             UNION ALL
             SELECT
             mui.pname AS pname,
@@ -112,7 +114,9 @@
             AND MW.`week` IN ( 6, 7 )
             and mw.work_date <![CDATA[ >= ]]> #{query.workStartDate}
             and mw.work_date <![CDATA[ <= ]]> #{query.workEndDate}
-            AND MUI.pcode = #{query.pcode}
+            <if test="query.pcode != null and query.pcode != ''">
+                AND MUI.pcode = #{query.pcode}
+            </if>
         ) t
         ORDER BY t.workDate ASC
     </select>

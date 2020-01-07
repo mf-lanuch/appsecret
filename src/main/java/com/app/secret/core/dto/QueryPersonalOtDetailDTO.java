@@ -12,14 +12,6 @@ import java.util.Date;
  */
 @Data
 public class QueryPersonalOtDetailDTO extends BasePageQueryRequest {
-//    @NotNull(message = "工作年份不能为空")
-//    @ApiModelProperty("工作年份")
-//    private Integer workYear;
-//
-//    @NotNull(message = "工作月份不能为空")
-//    @ApiModelProperty("工作月份")
-//    private Integer workMonth;
-
     @NotNull
     @ApiModelProperty(value = "开始日期")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
@@ -30,7 +22,7 @@ public class QueryPersonalOtDetailDTO extends BasePageQueryRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date workEndDate;
 
-    @NotNull(message = "工作月份不能为空")
+    @NotNull(message = "工号不能为空")
     @ApiModelProperty(value = "工号")
     private String pcode;
 }
