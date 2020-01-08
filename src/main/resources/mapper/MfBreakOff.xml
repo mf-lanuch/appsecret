@@ -42,5 +42,31 @@
         </trim>
     </sql>
 
-
+    <select id="listMfBreakOff" resultType="com.app.secret.core.vo.MfBreakOffVO">
+        SELECT
+             b.pcode as pcode,
+             b.pname as pname,
+             a.work_year as workYear,
+             a.work_month as workMonth,
+             a.usable_break_off_time as usableBreakOffTime,
+             a.used_break_off_time as usedBreakOffTime,
+             (TIME_TO_SEC(a.used_break_off_time) / TIME_TO_SEC(a.usable_break_off_time)) as breakOffVal
+        FROM mf_break_off a
+        left join mf_user_info b
+        on a.user_id = b.id
+        where 1=1
+        <if test="query.pname != null and query.pname != ''">
+            and b.pname = #{query.pname}
+        </if>
+        <if test="query.pcode != null and query.pcode != ''">
+            and b.pcode = #{query.pcode}
+        </if>
+        <if test="query.workYear != null">
+            and a.work_year = #{query.workYear}
+        </if>
+        <if test="query.workMonth != null">
+            and a.work_month = #{query.workMonth}
+        </if>
+        ORDER BY a.usable_break_off_time desc
+    </select>
 </mapper>

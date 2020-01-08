@@ -1,10 +1,16 @@
 package com.app.secret.services.impl;
 
+import com.app.secret.core.domain.PageResult;
+import com.app.secret.core.dto.QueryMfBreakOffDTO;
 import com.app.secret.core.dto.QueryOverTimeListDTO;
+import com.app.secret.core.util.CommonConverter;
+import com.app.secret.core.vo.MfBreakOffVO;
 import com.app.secret.core.vo.PersonalOvertimeVO;
 import com.app.secret.entity.MfUserInfo;
 import com.app.secret.mapper.MfBreakOffMapper;
 import com.app.secret.mapper.MfUserInfoMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,13 +57,19 @@ public class MfBreakOffServiceImpl implements MfBreakOffService {
         }
     }
 
+    @Override
+    public PageResult<MfBreakOffVO> listMfBreakOff(QueryMfBreakOffDTO dto) {
+        PageHelper.startPage(dto.getPageIndex(), dto.getPageSize());
+        return CommonConverter.convertToPageResult(new PageInfo<>(mfBreakOffMapper.listMfBreakOff(dto)));
+    }
+
+    // region
     private String getUserIdByPcode(PersonalOvertimeVO eachVO) {
         Example example = new Example(MfUserInfo.class);
         example.createCriteria().andEqualTo("pcode", eachVO.getPcode());
         List<MfUserInfo> userInfos = mfUserInfoMapper.selectByExample(example);
         return userInfos.get(0).getId();
     }
-
 
     private static Date randomDate(String beginTime, String endTime) {
         try {
@@ -99,5 +111,5 @@ public class MfBreakOffServiceImpl implements MfBreakOffService {
         String dateString = format.format(date);
         return dateString;
     }
-
+    // endregion
 }
