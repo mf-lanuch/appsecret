@@ -113,7 +113,7 @@
 		overtime.workMonth,
 		0 AS totalOverTime,
 		0 as overTimeRate,
-		overtime.talOverTime/((MWT.work_day * MWT.work_time * 3600 * (select count(1) from mf_user_info))) AS periodOvertimeRate
+		overtime.talOverTime/((MWT.work_day * MWT.work_time * 3600 * (select count(1) from mf_user_info))) * 100 AS periodOvertimeRate
 		FROM (
 		SELECT
 		MW.work_year AS workYear,
